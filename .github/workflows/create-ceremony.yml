@@ -6,6 +6,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+      with:
+        lfs: false
     - name: Run CLI
       run: make create unattended=true
     - uses: stefanzweifel/git-auto-commit-action@v5
