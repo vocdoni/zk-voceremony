@@ -5,12 +5,13 @@ jobs:
   compile-and-prepare:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout the repository
+      uses: actions/checkout@v4
       with:
         lfs: true
     - name: Checkout LFS objects
       run: git lfs checkout
-    - name: Run CLI
+    - name: Run toolkit
       run: make create unattended=true
     - uses: stefanzweifel/git-auto-commit-action@v5
       env:
@@ -19,3 +20,10 @@ jobs:
         commit_message: Create '${{ github.ref }}' ceremony
         commit_options: '--no-verify'
         commit_user_name: Voceremony Bot
+    - uses: nashmaniac/create-issue-action@v1.2
+      name: Create issue to end ceremony
+      with:
+        title: "Ceremony: ${{ github.ref }}"
+        token: ${{ secrets.GITHUB_TOKEN }}
+        assignees: ${{ github.actor }}
+        body: "Close this issue to ends this ceremony"

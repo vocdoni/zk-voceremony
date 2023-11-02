@@ -7,6 +7,7 @@ log() {
 # error function helps to print error messages
 error() {
 	echo "-- [ZK-VOCEREMONY:ERROR] -- $1"
+	exit 0
 }
 
 # include the environment variables
