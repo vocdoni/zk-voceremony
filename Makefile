@@ -18,12 +18,22 @@ else ifeq (, $(shell command -v git))
 	$(error git is required and is not installed)
 endif
 
-create: check-create-dependencies
+launch-creation: check-create-dependencies
 	$(info Starting docker container...)
-	@docker build -q -t zk-voceremony-creator -f ./dockerfiles/create-ceremony.dockerfile .
-	@docker run -qit -v ./:/app --env-file ./ceremony.env zk-voceremony-creator
+	@docker build -q -t zk-voceremony-creator-image -f ./dockerfiles/create-ceremony.dockerfile .
+	@docker run --name zk-voceremony-creator -qit -v ./:/app --env-file ./ceremony.env zk-voceremony-creator-image
 
-contribute: check-contribute-dependencies
+launch-contribution: check-contribute-dependencies
 	$(info Starting docker container...)
-	@docker build -q -t zk-voceremony-contributor -f ./dockerfiles/contribute-ceremony.dockerfile .
-	@docker run -qit -v ./:/app --env-file ./ceremony.env zk-voceremony-contributor
+	@docker build -q -t zk-voceremony-contributor-image -f ./dockerfiles/contribute-ceremony.dockerfile .
+	@docker run --name zk-voceremony-contributor -qit -v ./:/app --env-file ./ceremony.env zk-voceremony-contributor-image
+
+create: launch-creation
+	$(info Cleaning up...)
+	@docker rm zk-voceremony-creator -f -v
+	@docker rmi zk-voceremony-creator-image -f
+
+contribute: launch-contribution
+	$(info Cleaning up...)
+	@docker rm zk-voceremony-contributor -f -v > /dev/null
+	@docker rmi zk-voceremony-contributor-image -f > /dev/null
