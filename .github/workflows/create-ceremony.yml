@@ -1,11 +1,8 @@
 name: Create ceremony
 on: 
-  branch_protection_rule:
-    types: [created]
-  
+  create
 jobs:
   compile-and-prepare:
-    if: ${{ !contains(github.ref, 'main') }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
