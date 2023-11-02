@@ -2,11 +2,7 @@
 
 . scripts/tools.sh
 
-CIRCOM=circom
-SNARKJS="snarkjs"
-
 check_create_env() {
-	check_env
 	echo -e "Welcome to the '$CEREMONY_BRANCH' zk-voceremony creation process!\n"
 	echo " - You are using '$CIRCUIT_PATH' as circuit file and '$INPUT_PTAU_PATH' as initial ptau file."
 	echo " - This script will compile the circuit and perform the initial contribution."

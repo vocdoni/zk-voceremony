@@ -2,11 +2,7 @@
 
 . scripts/tools.sh
 
-SNARKJS="snarkjs"
-
 check_contribute_env() {
-    # check the global environment
-    check_env
     # get the last contribution zkey file from the contributions file
     if [ ! -f "$CONTRIBUTION_FILE" ]; then
         error "contribution file does not exists, is the ceremony initialized?"
@@ -45,6 +41,27 @@ check_contribute_env() {
 
 make_contribution() {
     $SNARKJS zkc $LAST_CONTRIBUTION_FILE $OUTPUT_PATH/${CIRCUIT_FILENAME}_${CONTRIBUTOR_NAME}.zkey
+}
+
+append_hash_to_contributions() {
+	local contribution_hash=$(get_file_hash "$1")
+	local contribution_filepath=$(basename -- "$1")
+	local contribution_line="$contribution_filepath:$contribution_hash"
+	# calculate the target line to append the contribution hash
+	total_lines=$(wc -l < "$CONTRIBUTION_FILE")
+	contribution_target_line=$((total_lines - 6))
+	last_contribution_target_line=$((total_lines))
+	# create a temporary file
+    temp_file=$(mktemp)
+    # copy lines up to the target line to the temporary file
+    head -n "$contribution_target_line" "$CONTRIBUTION_FILE" > "$temp_file"
+    # append the new content
+    echo "$contribution_line" >> "$temp_file"
+    # append the remaining lines after the new content
+    tail -n +$((contribution_target_line + 1)) "$CONTRIBUTION_FILE" >> "$temp_file"
+    # replace the original file with the temporary file including the new 
+	# last contribution hash
+	sed "${last_contribution_target_line}s/.*/$contribution_line/" $temp_file > "$CONTRIBUTION_FILE"
 }
 
 init_contribution() {
