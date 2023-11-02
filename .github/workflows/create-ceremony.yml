@@ -7,7 +7,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
       with:
-        lfs: false
+        lfs: true
+    - name: Checkout LFS objects
+      run: git lfs checkout
     - name: Run CLI
       run: make create unattended=true
     - uses: stefanzweifel/git-auto-commit-action@v5
