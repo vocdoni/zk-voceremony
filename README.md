@@ -27,12 +27,12 @@ You can read more about trusted zk ceremonies [here](https://zkproof.org/2021/06
 * **Makefile**: As a CLI. It performs some checks such as if the previous dependencies are available or if the user have the correct environment in every process stage. 
 
 ### 1. Create a new zk-ceremony
-****A.** Create a new branch for your ceremony from `main`:
+**A.** Create a new branch for your ceremony from `main`:
 ```sh
 git checkout -b {ceremony_name}
 ```
 
-B.** Copy your circuit file and your phase 1 *Powers of Tau* file:
+**B.** Copy your circuit file and your phase 1 *Powers of Tau* file:
 ```sh
 cp /path/to/your/circuit/{circuit_name}.circom ./{circuit_name}.circom
 cp /path/to/your/{initial_ptau}.ptau ./{initial_ptau}.ptau
