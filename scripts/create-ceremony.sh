@@ -13,12 +13,14 @@ check_create_env() {
 	echo " - The global artifacts and initial contribution will be stored in '$OUTPUT_PATH' folder."
 	echo " - The ceremony information and contributions will be stored in '$CONTRIBUTION_FILE' file."
 	echo -e "\nRemember to commit and push the changes to the ceremony branch after the process is finished.\n"
-
-	read -p "This process will overwrite any previous version. Are you sure? (y/n)" -n 1 -r
-	echo -e "\n"
-	if [[ ! $REPLY =~ ^[Yy]$ ]]
-	then
-		exit 1
+	# if the -y flag is not present, ask for confirmation
+	if [ ! "$1" = "-y" ]; then
+		read -p "This process will overwrite any previous version. Are you sure? (y/n)" -n 1 -r
+		echo -e "\n"
+		if [[ ! $REPLY =~ ^[Yy]$ ]]
+		then
+			exit 1
+		fi
 	fi
 }
 
@@ -66,7 +68,7 @@ ${CIRCUIT_FILENAME}_initial_contribution.zkey:$initial_zkey_hash
 
 init_ceremony() {
 	# check the environment
-	check_create_env
+	check_create_env $1 || error "error checking the environment"
 	# create the output folder
 	mkdir -p $OUTPUT_PATH
 	# compile the circuit
@@ -77,4 +79,4 @@ init_ceremony() {
 	save_initial_contribution || error "error storing initial contribution"
 }
 
-init_ceremony
+init_ceremony $1

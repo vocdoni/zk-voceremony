@@ -20,8 +20,13 @@ endif
 
 launch-creation: check-create-dependencies
 	$(info Starting docker container...)
+	$(info $(unattended))
 	@docker build -q -t zk-voceremony-creator-image -f ./dockerfiles/create-ceremony.dockerfile .
+ifeq ($(unattended), true)
+	@docker run --name zk-voceremony-creator -q -v ./:/app --env-file ./ceremony.env zk-voceremony-creator-image  bash ./scripts/create-ceremony.sh -y
+else
 	@docker run --name zk-voceremony-creator -qit -v ./:/app --env-file ./ceremony.env zk-voceremony-creator-image
+endif
 
 launch-contribution: check-contribute-dependencies
 	$(info Starting docker container...)

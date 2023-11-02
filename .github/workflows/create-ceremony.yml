@@ -1,0 +1,20 @@
+name: Create ceremony
+on: 
+  branch_protection_rule:
+    types: [created]
+  
+jobs:
+  compile-and-prepare:
+    if: ${{ !contains(github.ref, 'main') }}
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Run CLI
+      run: make create unattended=true
+    - uses: stefanzweifel/git-auto-commit-action@v5
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        commit_message: Create '${{ github.ref }}' ceremony
+        commit_options: '--no-verify'
+        commit_user_name: Voceremony Bot
