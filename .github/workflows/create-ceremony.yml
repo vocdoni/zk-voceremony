@@ -20,10 +20,10 @@ jobs:
         commit_message: Create '${{ github.ref }}' ceremony
         commit_options: '--no-verify'
         commit_user_name: Voceremony Bot
-    - uses: nashmaniac/create-issue-action@v1.2
+    - uses: dacbd/create-issue-action@main
       name: Create issue to end ceremony
       with:
         title: "Ceremony: ${{ github.ref }}"
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ github.token }}
         assignees: ${{ github.actor }}
         body: "Close this issue to ends this ceremony"
