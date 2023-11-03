@@ -18,9 +18,9 @@ else
 endif
 
 check-contribute-dependencies:
-ifeq (,$(wildcard ./artifacts/*))
+ifeq (,$(wildcard $(CONTRIBUTIONS_PATH)/*))
 	$(error artifacts are required and are not found, are you sure that you are in the right branch?)
-else ifeq (, $(wildcard CONTRIBUTIONS.md ))
+else ifeq (, $(wildcard $(CONTRIBUTIONS_PATH)/CONTRIBUTIONS.md ))
 	$(error the ceremony is not started, are you sure that you are in the right branch?)
 endif
 
@@ -36,7 +36,7 @@ endif
 push-creation:
 	$(info Pushing changes...)
 	@git add $(TARGET_CIRCUIT) $(INPUT_PTAU) ceremony.env
-	@git commit -m "init '$(CEREMONY_BRANCH)' ceremony"
+	@git commit -m "Init '$(CEREMONY_BRANCH)' ceremony"
 	@git push origin $(CEREMONY_BRANCH)
 
 clean-creation:
@@ -57,18 +57,39 @@ launch-contribution:
 
 push-contribution:
 	$(info Pushing changes...)
-	@git add CONTRIBUTIONS.md ./artifacts/*.zkey
-	@git commit -m "Contribution"
+	@git add $(CONTRIBUTIONS_PATH)/CONTRIBUTIONS.md ./$(CONTRIBUTIONS_PATH)/*.zkey
+	@git commit -m "New contribution"
 	@git push origin $(CEREMONY_BRANCH)
 
 clean-contribution:
 	$(info Cleaning up...)
 	@docker rmi zk-voceremony-contributor-image -f
 
+launch-finish-ceremony:
+	$(info Starting docker container...)
+	@docker build -q -t zk-voceremony-finisher-image -f ./dockerfiles/finish-ceremony.dockerfile .
+	@docker run --rm --name zk-voceremony-finisher -qit -v ./:/app --env-file ./ceremony.env zk-voceremony-finisher-image
+
+clean-finish-ceremony:
+	$(info Cleaning up...)
+	@docker rmi zk-voceremony-finisher-image -f
+
+push-finish-ceremony:
+	$(info Pushing changes...)
+	@git add $(OUTPUT_PATH)/RESULTS.md $(OUTPUT_PATH)/*.zkey $(OUTPUT_PATH)/*.json $(OUTPUT_PATH)/*.wasm
+	@git commit -m "Finish '$(CEREMONY_BRANCH)' ceremony"
+	@git push origin $(CEREMONY_BRANCH)
+
 create: global-checks push-creation
 	$(info Done! Check the process in github action report and checkout the results in $(CEREMONY_BRANCH).)
 
 create-locally: global-checks launch-creation clean-creation
+	$(info Done!)
+
+finish: global-checks launch-finish-ceremony clean-finish-ceremony push-finish-ceremony
+	$(info Done!)
+
+finish-locally: global-checks launch-finish-ceremony clean-finish-ceremony
 	$(info Done!)
 
 contribute: global-checks check-contribute-dependencies pull-to-contribute launch-contribution push-contribution clean-contribution

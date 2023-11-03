@@ -1,0 +1,25 @@
+name: Finish ceremony
+on: 
+  issues:
+    types: closed
+jobs:
+  compile-and-prepare:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the repository
+      uses: actions/checkout@v4
+      with:
+        lfs: true
+        ref: ${{ github.event.issue.title }}
+    - name: Checkout LFS objects
+      run: git lfs checkout
+    - name: Run toolkit
+      run: make create unattended=true
+    - name: Commit ceremony artifacts
+      uses: stefanzweifel/git-auto-commit-action@v5
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        commit_message: Finish '${{ github.event.issue.title }}' ceremony
+        commit_options: '--no-verify'
+        commit_user_name: Voceremony Bot
