@@ -21,11 +21,11 @@ jobs:
         commit_message: Create '${{ github.ref }}' ceremony
         commit_options: '--no-verify'
         commit_user_name: Voceremony Bot
-    - uses: dacbd/create-issue-action@main
-      name: Create issue to end ceremony
+    - name: Create PR to end ceremony
+      uses: peter-evans/create-pull-request@v5
       with:
-        title: "${{ github.ref }}"
+        title: "On going ceremony: ${{ github.ref }}"
         token: ${{ github.token }}
         labels: "on-going-ceremony"
         assignees: ${{ github.actor }}
-        body: "Close this issue to ends this ceremony"
+        body: "Close this PR without merge it to ends this ceremony"
