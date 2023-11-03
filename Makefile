@@ -2,7 +2,7 @@
 
 CURRENT_BRANCH := $(shell git branch --show-current)
 
-global_checks:
+global-checks:
 ifeq (, $(wildcard ceremony.env ))
 	$(error ceremony.env is required and is not found, copy example.env to ceremony.env and fill in the values)
 else ifeq (, $(shell command -v docker))
@@ -35,7 +35,7 @@ endif
 
 push-creation:
 	$(info Pushing changes...)
-	@git add $(TARGET_CIRCUIT) $(INPUT_PTAU) $(CEREMONY_BRANCH)
+	@git add $(TARGET_CIRCUIT) $(INPUT_PTAU) ceremony.env
 	@git commit -m "init '$(CEREMONY_BRANCH)' ceremony"
 	@git push origin $(CEREMONY_BRANCH)
 
@@ -65,8 +65,11 @@ clean-contribution:
 	$(info Cleaning up...)
 	@docker rmi zk-voceremony-contributor-image -f
 
-create: global_checks launch-creation push-creation clean-creation
+create: global-checks push-creation
 	$(info Done! Check the process in github action report and checkout the results in $(CEREMONY_BRANCH).)
 
-contribute: global_checks check-contribute-dependencies pull-to-contribute launch-contribution push-contribution clean-contribution
+create-locally: global-checks launch-creation clean-creation
+	$(info Done!)
+
+contribute: global-checks check-contribute-dependencies pull-to-contribute launch-contribution push-contribution clean-contribution
 	$(info Done! Thanks for contributing! You can remove this repo.)

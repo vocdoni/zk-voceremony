@@ -12,7 +12,7 @@ jobs:
     - name: Checkout LFS objects
       run: git lfs checkout
     - name: Run toolkit
-      run: make create unattended=true
+      run: make create-locally unattended=true
     - name: Commit ceremony artifacts
       uses: stefanzweifel/git-auto-commit-action@v5
       env:
