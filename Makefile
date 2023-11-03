@@ -9,6 +9,8 @@ else ifeq (, $(shell command -v docker))
 	$(error docker is required and is not installed)
 else ifeq (, $(shell command -v git))
 	$(error git is required and is not installed)
+else ifeq (, $(shell command -v git lfs))
+	$(error git lfs is required and is not installed. Once installed, run 'git lfs install')
 else ifeq ($(CURRENT_BRANCH), main)
 	$(error You are on the main branch, please switch to a ceremony branch)
 endif

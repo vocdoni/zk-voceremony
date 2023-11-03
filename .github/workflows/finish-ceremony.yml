@@ -1,9 +1,9 @@
 name: Finish ceremony
 on: 
   issues:
-    types: closed
+    types: [closed] 
 jobs:
-  compile-and-prepare:
+  finish-ceremony:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the repository
@@ -14,7 +14,7 @@ jobs:
     - name: Checkout LFS objects
       run: git lfs checkout
     - name: Run toolkit
-      run: make create unattended=true
+      run: make finish-locally
     - name: Commit ceremony artifacts
       uses: stefanzweifel/git-auto-commit-action@v5
       env:
