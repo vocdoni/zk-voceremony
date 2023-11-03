@@ -50,28 +50,17 @@ And will update:
  * `{CONTRIBUTIONS_PATH}/CONTRIBUTIONS.md`: Add your contribution filename and checksum to the list of contributions and set it as the last contribution.
 
 ### Create a new zk-ceremony
-**A.** Create a new branch for your ceremony from `main`:
+**A.** Run the following command to prepare the environment:
 ```sh
-git checkout -b {ceremony_name}
+make env
 ```
+This will create the `ceremony.env` following the `example.env` template, asking to you the required inputs. Then it will copy from your filesystem into the repo:
+ * `{INPUTS_PATH}/{circuite_name}.circom`: the circom circuit file target of the ceremony
+ * `{INPUTS_PATH}/{initial_ptau}.ptau`: the initial ptau file
 
-**B.** Copy your circuit file and your phase 1 *Powers of Tau* file:
-```sh
-cp /path/to/your/circuit/{circuit_name}.circom ./{circuit_name}.circom
-cp /path/to/your/{initial_ptau}.ptau ./{initial_ptau}.ptau
-```
-You can use one of the Perpetual Power of Tau from [here](https://github.com/iden3/snarkjs?tab=readme-ov-file#7-prepare-phase-2) based on the number of constrains of your circuit. Read more [here](https://github.com/privacy-scaling-explorations/perpetualpowersoftau) about Perpetual Powers of Tau.
+It also will create the ceremony branch and commit these files.
 
-**C.** Copy `example.env` to `ceremony.env` and complete with your information or:
-```sh
-echo "TARGET_CIRCUIT=./circuit.circom
-INPUT_PTAU=./input.ptau
-CEREMONY_BRANCH=my-ceremony-branch
-CONTRIBUTIONS_PATH=./contributions
-OUTPUT_PATH=./output" > ceremony.env
-```
-
-**D.** Upload and start the ceremony:
+**B.** Upload and start the ceremony:
 ```sh
 make create
 ```

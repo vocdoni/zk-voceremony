@@ -64,3 +64,15 @@ get_last_contribution_hash() {
     fi
     echo "$last_contribution_hash"
 }
+
+ask_to_user() {
+    local asnwer=""
+    while true; do
+        read -p "$1 " answer
+        # Check if the alias is not empty
+        if [ -n "$answer" ]; then
+            break
+        fi
+    done
+    echo "$answer"
+}

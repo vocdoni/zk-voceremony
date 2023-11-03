@@ -12,16 +12,7 @@ check_contribute_env() {
         LAST_CONTRIBUTION_HASH=$(get_last_contribution_hash)
     fi
 
-    while true; do
-        read -p "Please enter your alias as contributor: " CONTRIBUTOR_NAME
-        # Check if the alias is not empty
-        if [ -n "$CONTRIBUTOR_NAME" ]; then
-            break
-        else
-            echo "Alias cannot be empty."
-        fi
-    done
-
+    CONTRIBUTOR_NAME=$(ask_to_user "Please enter your alias as contributor: ")
     echo -e "\nWelcome to the '$CEREMONY_BRANCH' zk-voceremony contribution process!\n"
     echo "Thanks $CONTRIBUTOR_NAME for your contribution!"
     echo " - You are using $LAST_CONTRIBUTION_FILE as last contribution file ($HASH: $LAST_CONTRIBUTION_HASH)"

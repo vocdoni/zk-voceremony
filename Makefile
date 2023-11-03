@@ -82,6 +82,9 @@ push-finish-ceremony:
 	@git commit -m "Finish '$(CEREMONY_BRANCH)' ceremony"
 	@git push origin $(CEREMONY_BRANCH)
 
+env:
+	@sh ./scripts/create-env.sh
+
 create: global-checks push-creation
 	$(info Done! Check the process in github action report and checkout the results in $(CEREMONY_BRANCH).)
 
