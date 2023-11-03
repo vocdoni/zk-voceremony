@@ -8,9 +8,9 @@ check_create_env() {
 	echo " - This script will compile the circuit and perform the initial contribution."
 	echo " - The global artifacts and initial contribution will be stored in '$OUTPUT_PATH' folder."
 	echo " - The ceremony information and contributions will be stored in '$CONTRIBUTION_FILE' file."
-	echo -e "\nRemember to commit and push the changes to the ceremony branch after the process is finished.\n"
 	# if the -y flag is not present, ask for confirmation
 	if [ ! "$1" = "-y" ]; then
+	echo -e "\nRemember to commit and push the changes to the ceremony branch after the process is finished.\n"
 		read -p "This process will overwrite any previous version. Are you sure? (y/n)" -n 1 -r
 		echo -e "\n"
 		if [[ ! $REPLY =~ ^[Yy]$ ]]

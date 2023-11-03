@@ -46,24 +46,13 @@ INPUT_PTAU=./{initial_ptau}.ptau
 CEREMONY_BRANCH={ceremony_name}" > ceremony.env
 ```
 
-**D.** Init the creation and follow the instructions:
+**D.** Upload and start the ceremony:
 ```sh
-make create
-```
-
-This will create:
- * `./artifacts/`: A new folder with the `wasm` compiled circuit, the circuit R1CS definition and the initial circuit `zkey` contribution.
- * `./CONTRIBUTIONS.md`: A new file to track the files checksums for every contribution.
-
-**E.** Upload and start the ceremony:
-```sh
-git add artifacts/{circuit_name}.wasm \
-    artifacts/{circuit_name}.r1cs \
-    artifacts/{circuit_name}_initial_contribution.zkey \
-    CONTRIBUTION.md
+git add {circuit_name}.circom {initial_ptau}.ptau ceremony.env
 git commit -m "{your commit message}"
 git push origin {ceremony_name}
 ```
+A Github action will compile the circuit and generate the first contribution in the `{ceremony_name}` branch. This Github will also create an issue assigned to you. If this issue is closed, another Github action will be triggered that will finish the ceremony and generate the final artifacts.
 
 ### 2. Contribute to a ceremony
 
@@ -72,6 +61,7 @@ git push origin {ceremony_name}
 git fetch origin
 git checkout {ceremony_name}
 git pull origin {ceremony_name}
+git lfs checkout
 ```
 
 **B.** Init the contribution and follow the instructions:

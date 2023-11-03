@@ -24,7 +24,7 @@ else ifeq (, $(wildcard CONTRIBUTIONS.md ))
 	$(error the ceremony is not started, are you sure that you are in the right branch?)
 endif
 
-launch-creation: global_checks
+launch-creation:
 	$(info Starting docker container...)
 	@docker build -q -t zk-voceremony-creator-image -f ./dockerfiles/create-ceremony.dockerfile .
 ifeq ($(unattended), true)
@@ -33,15 +33,40 @@ else
 	@docker run --rm --name zk-voceremony-creator -qit -v ./:/app --env-file ./ceremony.env zk-voceremony-creator-image
 endif
 
-launch-contribution: global_checks check-contribute-dependencies
+push-creation:
+	$(info Pushing changes...)
+	@git add $(TARGET_CIRCUIT) $(INPUT_PTAU) $(CEREMONY_BRANCH)
+	@git commit -m "init '$(CEREMONY_BRANCH)' ceremony"
+	@git push origin $(CEREMONY_BRANCH)
+
+clean-creation:
+	$(info Cleaning up...)
+	@docker rmi zk-voceremony-creator-image -f
+
+pull-to-contribute:
+	$(info Pulling latest changes...)
+	@git fetch origin $(CEREMONY_BRANCH)
+	@git checkout $(CEREMONY_BRANCH)
+	@git pull origin $(CEREMONY_BRANCH)
+	@git lfs pull
+
+launch-contribution:
 	$(info Starting docker container...)
 	@docker build -q -t zk-voceremony-contributor-image -f ./dockerfiles/contribute-ceremony.dockerfile .
 	@docker run --rm --name zk-voceremony-contributor -qit -v ./:/app --env-file ./ceremony.env zk-voceremony-contributor-image
 
-create: launch-creation
-	$(info Cleaning up...)
-	@docker rmi zk-voceremony-creator-image -f
+push-contribution:
+	$(info Pushing changes...)
+	@git add CONTRIBUTIONS.md ./artifacts/*.zkey
+	@git commit -m "Contribution"
+	@git push origin $(CEREMONY_BRANCH)
 
-contribute: launch-contribution
+clean-contribution:
 	$(info Cleaning up...)
 	@docker rmi zk-voceremony-contributor-image -f
+
+create: global_checks launch-creation push-creation clean-creation
+	$(info Done! Check the process in github action report and checkout the results in $(CEREMONY_BRANCH).)
+
+contribute: global_checks check-contribute-dependencies pull-to-contribute launch-contribution push-contribution clean-contribution
+	$(info Done! Thanks for contributing! You can remove this repo.)

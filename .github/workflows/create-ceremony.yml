@@ -13,7 +13,8 @@ jobs:
       run: git lfs checkout
     - name: Run toolkit
       run: make create unattended=true
-    - uses: stefanzweifel/git-auto-commit-action@v5
+    - name: Commit ceremony artifacts
+      uses: stefanzweifel/git-auto-commit-action@v5
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -23,7 +24,8 @@ jobs:
     - uses: dacbd/create-issue-action@main
       name: Create issue to end ceremony
       with:
-        title: "Ceremony: ${{ github.ref }}"
+        title: "${{ github.ref }}"
         token: ${{ github.token }}
+        labels: "on-going-ceremony"
         assignees: ${{ github.actor }}
         body: "Close this issue to ends this ceremony"
