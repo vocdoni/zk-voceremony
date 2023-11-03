@@ -1,16 +1,17 @@
 name: Finish ceremony
-on: 
-  issues:
-    types: [closed] 
+on:
+  pull_request:
+    types: [ closed ]
 jobs:
   finish-ceremony:
+    if: github.event.pull_request.merged == false
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the repository
       uses: actions/checkout@v4
       with:
         lfs: true
-        ref: ${{ github.event.issue.title }}
+        ref: ${{ github.event.pull_request.head.ref }}
     - name: Checkout LFS objects
       run: git lfs checkout
     - name: Run toolkit
@@ -20,6 +21,6 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        commit_message: Finish '${{ github.event.issue.title }}' ceremony
+        commit_message: Finish '${{ github.event.pull_request.head.ref }}' ceremony
         commit_options: '--no-verify'
         commit_user_name: Voceremony Bot
