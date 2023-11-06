@@ -61,5 +61,5 @@ CONTRIBUTIONS_PATH=$contributions_path
 OUTPUT_PATH=$output_path" > ceremony.env
 
 git checkout -b $ceremony_branch
-git add ceremony.env $input_folder/$circuit_file $input_folder/$ptau_file
+git add -f ceremony.env $input_folder/$circuit_file $input_folder/$ptau_file
 git commit -m "Initialize ceremony"
