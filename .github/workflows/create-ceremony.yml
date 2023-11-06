@@ -22,10 +22,10 @@ jobs:
         commit_options: '--no-verify'
         commit_user_name: Voceremony Bot
     - name: Create PR to end ceremony
-      uses: peter-evans/create-pull-request@v5
-      with:
-        title: "On going ceremony: ${{ github.ref }}"
-        token: ${{ github.token }}
-        labels: "on-going-ceremony"
-        assignees: ${{ github.actor }}
-        body: "Close this PR without merge it to ends this ceremony"
+      run: gh pr create -B main -t "$PR_TITLE" -b "$PR_BODY" -l "$PR_LABELS" -a "$PR_ASSIGNEES"
+      env:
+        PR_TITLE: "On going ceremony: ${{ github.ref }}"
+        PR_BODY: "Close this PR without merge it to ends this ceremony"
+        PR_LABELS: "on-going-ceremony" 
+        PR_ASSIGNEES: ${{ github.actor }}
+        GITHUB_TOKEN: ${{ github.token }}
