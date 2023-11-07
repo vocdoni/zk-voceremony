@@ -58,11 +58,7 @@ This will create the `ceremony.env` following the `example.env` template, asking
  * `{INPUTS_PATH}/{circuite_name}.circom`: the circom circuit file target of the ceremony
  * `{INPUTS_PATH}/{initial_ptau}.ptau`: the initial ptau file
 
-It also will create the ceremony branch and commit these files.
+It also will create the ceremony branch, commit and push these files to this branch.
 
-**B.** Upload and start the ceremony:
-```sh
-make create
-```
-A Github action will compile the circuit and generate the first contribution in the `{ceremony_name}` branch. This Github will also create an issue assigned to you. If this issue is closed, another Github action will be triggered that will finish the ceremony and generate the final artifacts.
+A Github action will compile the circuit and generate the first contribution in the `{ceremony_name}` branch. This Github will also create an Pull Request assigned to you. If this PR is closed by you (without merge it), another Github action will be triggered that will finish the ceremony and generate the final artifacts.
 
