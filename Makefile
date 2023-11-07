@@ -70,7 +70,7 @@ clean-contribution:
 launch-finish-ceremony:
 	$(info Starting docker container...)
 	@docker build -q -t zk-voceremony-finisher-image -f ./dockerfiles/finish-ceremony.dockerfile .
-	@docker run --rm --name zk-voceremony-finisher -qit -v ./:/app --env-file ./ceremony.env zk-voceremony-finisher-image
+	@docker run --rm --name zk-voceremony-finisher -qt -v ./:/app --env-file ./ceremony.env zk-voceremony-finisher-image
 
 clean-finish-ceremony:
 	$(info Cleaning up...)
@@ -82,10 +82,8 @@ push-finish-ceremony:
 	@git commit -m "Finish '$(CEREMONY_BRANCH)' ceremony"
 	@git push origin $(CEREMONY_BRANCH)
 
-env:
+env: global-checks 
 	@sh ./scripts/create-env.sh
-
-create: global-checks push-creation
 	$(info Done! Check the process in github action report and checkout the results in $(CEREMONY_BRANCH).)
 
 create-locally: global-checks launch-creation clean-creation
