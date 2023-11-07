@@ -3,17 +3,21 @@
 CURRENT_BRANCH := $(shell git branch --show-current)
 
 global-checks:
-ifeq (, $(wildcard ceremony.env ))
-	$(error ceremony.env is required and is not found, copy example.env to ceremony.env and fill in the values)
-else ifeq (, $(shell command -v docker))
+ifeq (, $(shell command -v docker))
 	$(error docker is required and is not installed)
 else ifeq (, $(shell command -v git))
 	$(error git is required and is not installed)
 else ifeq (, $(shell command -v git lfs))
 	$(error git lfs is required and is not installed. Once installed, run 'git lfs install')
+endif
+
+on-going-ceremony-check:
+ifeq (, $(wildcard ceremony.env ))
+	$(error ceremony.env is required and is not found, copy example.env to ceremony.env and fill in the values)
 else ifeq ($(CURRENT_BRANCH), main)
 	$(error You are on the main branch, please switch to a ceremony branch)
 endif
+
 ifeq ($(CURRENT_BRANCH), $(CEREMONY_BRANCH))
 else 
 	$(error You are not on the ceremony branch, please switch to $(CEREMONY_BRANCH) branch)
@@ -86,14 +90,14 @@ env: global-checks
 	@sh ./scripts/create-env.sh
 	$(info Done! Check the process in github action report and checkout the results in $(CEREMONY_BRANCH).)
 
-create-locally: global-checks launch-creation clean-creation
+create-locally: global-checks on-going-ceremony-check launch-creation clean-creation
 	$(info Done!)
 
-finish: global-checks launch-finish-ceremony clean-finish-ceremony push-finish-ceremony
+finish: global-checks on-going-ceremony-check launch-finish-ceremony clean-finish-ceremony push-finish-ceremony
 	$(info Done!)
 
-finish-locally: global-checks launch-finish-ceremony clean-finish-ceremony
+finish-locally: global-checks on-going-ceremony-check launch-finish-ceremony clean-finish-ceremony
 	$(info Done!)
 
-contribute: global-checks check-contribute-dependencies pull-to-contribute launch-contribution push-contribution clean-contribution
+contribute: global-checks on-going-ceremony-check check-contribute-dependencies pull-to-contribute launch-contribution push-contribution clean-contribution
 	$(info Done! Thanks for contributing! You can remove this repo.)
