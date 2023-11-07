@@ -20,7 +20,7 @@ You can read more about trusted zk ceremonies [here](https://zkproof.org/2021/06
 
 ## How to use the toolkit?
 
- - [Requirments](#requirements)
+ - [Requirements](#requirements)
  - [Contribute to a ceremony](#contribute-to-a-ceremony)
  - [Create a new zk-ceremony](#create-a-new-zk-ceremony)
 
@@ -36,6 +36,7 @@ You can read more about trusted zk ceremonies [here](https://zkproof.org/2021/06
 **A.** Clone the repository and checkout the branch with the name of the desired ceremony:
 ```sh
 git clone git@github.com:vocdoni/zk-voceremony.git
+cd zk-voceremony
 git checkout {CEREMONY_BRANCH}
 ```
 
@@ -62,3 +63,8 @@ It also will create the ceremony branch, commit and push these files to this bra
 
 A Github action will compile the circuit and generate the first contribution in the `{ceremony_name}` branch. This Github will also create an Pull Request assigned to you. If this PR is closed by you (without merge it), another Github action will be triggered that will finish the ceremony and generate the final artifacts.
 
+## Troubleshooting
+
+ * `make contribute` fails with `git: 'lfs' is not a git command. See 'git --help'.`
+
+    You need **Git LFS installed and initialized**, get it at https://git-lfs.com/
