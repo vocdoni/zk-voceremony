@@ -65,6 +65,24 @@ A Github action will compile the circuit and generate the first contribution in 
 
 ## Troubleshooting
 
- * `make contribute` fails with `git: 'lfs' is not a git command. See 'git --help'.`
+### `make contribute` fails with `git: 'lfs' is not a git command. See 'git --help'.`
 
-    You need **Git LFS installed and initialized**, get it at https://git-lfs.com/
+You need **Git LFS installed and initialized**, get it at https://git-lfs.com/
+    
+### `make contribute` fails with `Commits must have valid signatures`
+
+If you get this:
+```
+remote: error: GH006: Protected branch update failed for refs/heads/testing-ceremony.
+remote: error: Commits must have valid signatures.
+To github.com:vocdoni/zk-voceremony.git
+ ! [remote rejected] testing-ceremony -> testing-ceremony (protected branch hook declined)
+error: failed to push some refs to 'github.com:vocdoni/zk-voceremony.git'
+make: *** [Makefile:68: push-contribution] Error 1
+```
+You need to configure Git to [sign your commits](https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits)
+
+Also note that you'll need to discard your unsigned commit by doing
+```
+git reset --hard origin/$(git branch --show-current)
+```
