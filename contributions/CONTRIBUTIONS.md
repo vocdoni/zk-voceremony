@@ -6,9 +6,10 @@
 ### Contributions
 ```
 census_initial_contribution.zkey:273004d57344e8018b271a9ace15e03a17eda10d3c7b51ffb0c6bc372cb2a59e26966cc3da213bef642836e89078f7d399ed3d1594f389610c930c2c31aed3eb
+census_GuiZK.zkey:336a50dd3b7105adf6188bab5fd23c9d4f93dae131d99742d42efcd6999936f07eff2908aefce00340d85d67c42a0fe1e52e13546fe1c356a3256b9136c1c9a1
 ```
 
 ### Last contribution
 ```
-
+census_GuiZK.zkey:336a50dd3b7105adf6188bab5fd23c9d4f93dae131d99742d42efcd6999936f07eff2908aefce00340d85d67c42a0fe1e52e13546fe1c356a3256b9136c1c9a1
 ```
