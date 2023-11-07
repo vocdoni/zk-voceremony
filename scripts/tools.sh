@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # log function helps to print info messages
 log() {
@@ -7,6 +7,7 @@ log() {
 # error function helps to print error messages
 error() {
 	echo "-- [ZK-VOCEREMONY:ERROR] -- $1"
+	exit 0
 }
 
 # include the environment variables
@@ -20,30 +21,21 @@ else
 fi
 
 HASH=b2sum
+CIRCOM=circom
+SNARKJS="snarkjs"
 
 CIRCUIT_PATH="${TARGET_CIRCUIT:-"./circuit.circom"}"
 INPUT_PTAU_PATH="${INPUT_PTAU:-"./input.ptau"}"
-OUTPUT_PATH="${OUTPUT_PATH:-"./artifacts"}"
+
+CONTRIBUTIONS_PATH="${CONTRIBUTIONS_PATH:-"./contributions"}"
+CONTRIBUTIONS_FILE="$CONTRIBUTIONS_PATH/CONTRIBUTIONS.md"
+
+OUTPUT_PATH="${OUTPUT_PATH:-"./results"}"
+OUTPUT_FILE="$OUTPUT_PATH/RESULTS.md"
 
 CIRCUIT_FILE=$(basename -- "$CIRCUIT_PATH")
 CIRCUIT_FILENAME="${CIRCUIT_FILE%.*}"
-CONTRIBUTION_FILE="${CONTIBUTIONS_PATH:-"CONTRIBUTIONS.md"}"
-CURRENT_BRANCH=$(git branch --show-current)
 
-check_env() {
-	if [ -z "$CEREMONY_BRANCH" ]; then
-		error "CEREMONY_BRANCH env var is not set."
-		exit 1
-	fi
-
-	if [ "$CURRENT_BRANCH" == "main" ]; then
-		error "you are in the main branch, please checkout the ceremony branch to contribute"
-		exit 1
-	elif [ "$CURRENT_BRANCH" != "$CEREMONY_BRANCH" ]; then
-		error "you are in the wrong branch, please checkout the ceremony branch to contribute"
-		exit 1
-	fi
-}
 
 get_file_hash() {
 	# get the hash of the file and return the first part, the second part is 
@@ -51,23 +43,36 @@ get_file_hash() {
     echo "$($HASH "$1" | cut -d ' ' -f 1)"
 }
 
-append_hash_to_contributions() {
-	local contribution_hash=$(get_file_hash "$1")
-	local contribution_filepath=$(basename -- "$1")
-	local contribution_line="$contribution_filepath:$contribution_hash"
-	# calculate the target line to append the contribution hash
-	total_lines=$(wc -l < "$CONTRIBUTION_FILE")
-	contribution_target_line=$((total_lines - 6))
-	last_contribution_target_line=$((total_lines))
-	# create a temporary file
-    temp_file=$(mktemp)
-    # copy lines up to the target line to the temporary file
-    head -n "$contribution_target_line" "$CONTRIBUTION_FILE" > "$temp_file"
-    # append the new content
-    echo "$contribution_line" >> "$temp_file"
-    # append the remaining lines after the new content
-    tail -n +$((contribution_target_line + 1)) "$CONTRIBUTION_FILE" >> "$temp_file"
-    # replace the original file with the temporary file including the new 
-	# last contribution hash
-	sed "${last_contribution_target_line}s/.*/$contribution_line/" $temp_file > "$CONTRIBUTION_FILE"
+get_last_contribution_file_path() {
+    local last_contribution=$(tail -n 2 $CONTRIBUTIONS_FILE | head -n 1)
+    local last_contribution_filepath=$CONTRIBUTIONS_PATH/${CIRCUIT_FILENAME}_initial_contribution.zkey
+    if [ "$last_contribution" != "" ]; then
+        IFS=":"
+        read -ra parts <<< "$last_contribution"
+        last_contribution_filepath=$CONTRIBUTIONS_PATH/${parts[0]}
+    fi
+    echo "$last_contribution_filepath"
+}
+
+get_last_contribution_hash() {
+    local last_contribution=$(tail -n 2 $CONTRIBUTIONS_FILE | head -n 1)
+    local last_contribution_hash="<check CONTRIBUTIONS.md file>"
+    if [ "$last_contribution" != "" ]; then
+        IFS=":"
+        read -ra parts <<< "$last_contribution"
+        last_contribution_hash=${parts[1]}
+    fi
+    echo "$last_contribution_hash"
+}
+
+ask_to_user() {
+    local asnwer=""
+    while true; do
+        read -p "$1 " answer
+        # Check if the alias is not empty
+        if [ -n "$answer" ]; then
+            break
+        fi
+    done
+    echo "$answer"
 }

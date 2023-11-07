@@ -1,0 +1,31 @@
+name: Create ceremony
+on: 
+  create
+jobs:
+  compile-and-prepare:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the repository
+      uses: actions/checkout@v4
+      with:
+        lfs: true
+    - name: Checkout LFS objects
+      run: git lfs checkout
+    - name: Run toolkit
+      run: make create-locally unattended=true
+    - name: Commit ceremony artifacts
+      uses: stefanzweifel/git-auto-commit-action@v5
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        commit_message: Create '${{ github.ref }}' ceremony
+        commit_options: '--no-verify'
+        commit_user_name: Voceremony Bot
+    - name: Create PR to end ceremony
+      run: gh pr create -B main -t "$PR_TITLE" -b "$PR_BODY" -l "$PR_LABELS" -a "$PR_ASSIGNEES"
+      env:
+        PR_TITLE: "On going ceremony: ${{ github.ref }}"
+        PR_BODY: "Close this PR without merge it to ends this ceremony"
+        PR_LABELS: "on-going-ceremony" 
+        PR_ASSIGNEES: ${{ github.actor }}
+        GITHUB_TOKEN: ${{ github.token }}
