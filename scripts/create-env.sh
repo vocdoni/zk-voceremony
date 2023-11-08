@@ -1,6 +1,6 @@
 
 ask_to_user() {
-    local asnwer=""
+    local answer=""
     if [ -n "$2" ]; then
         read -p "$1 " answer
         if [ -n "$answer" ]; then
