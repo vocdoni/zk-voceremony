@@ -56,11 +56,11 @@ cp $input_ptau $input_folder/$ptau_file
 
 echo "TARGET_CIRCUIT=$input_folder/$circuit_file
 INPUT_PTAU=$input_folder/$ptau_file
-CEREMONY_BRANCH=$ceremony_branch
+CEREMONY_BRANCH=ceremony/$ceremony_branch
 CONTRIBUTIONS_PATH=$contributions_path
 OUTPUT_PATH=$output_path" > ceremony.env
 
-git checkout -b $ceremony_branch
+git checkout -b ceremony/$ceremony_branch
 git add -f ceremony.env $input_folder/$circuit_file $input_folder/$ptau_file
 git commit -m "Initialize ceremony"
 git push origin $ceremony_branch

@@ -4,6 +4,7 @@ on:
 jobs:
   compile-and-prepare:
     runs-on: ubuntu-latest
+    if: ${{ startsWith(github.ref, 'ceremony/') }}
     steps:
     - name: Checkout the repository
       uses: actions/checkout@v4
@@ -20,7 +21,7 @@ jobs:
       with:
         commit_message: Create '${{ github.ref }}' ceremony
         commit_options: '--no-verify'
-        commit_user_name: Voceremony Bot
+        commit_user_name: ${{ github.actor }}
     - name: Create PR to end ceremony
       run: gh pr create -B main -t "$PR_TITLE" -b "$PR_BODY" -l "$PR_LABELS" -a "$PR_ASSIGNEES"
       env:
