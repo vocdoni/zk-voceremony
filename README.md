@@ -33,16 +33,11 @@ You can read more about trusted zk ceremonies [here](https://zkproof.org/2021/06
 
 ### Contribute to a ceremony
 
-**A.** Clone the repository and checkout the branch with the name of the desired ceremony:
+**A.** You just need docker run, the image will clone this repository and guide you through the whole process
 ```sh
-git clone git@github.com:vocdoni/zk-voceremony.git
-git checkout {CEREMONY_BRANCH}
+docker run --rm -it zk-voceremony
 ```
 
-**B.** Init the contribution and follow the instructions:
-```sh
-make contribute
-```
 This will create:
  * `{CONTRIBUTIONS_PATH}/{circuite_name}_{contributor_alias}.zkey`: The result of your contribution.
 
@@ -52,7 +47,7 @@ And will update:
 ### Create a new zk-ceremony
 **A.** Run the following command to prepare the environment:
 ```sh
-make env
+docker run --rm -it zk-voceremony
 ```
 This will create the `ceremony.env` following the `example.env` template, asking to you the required inputs. Then it will copy from your filesystem into the repo:
  * `{INPUTS_PATH}/{circuite_name}.circom`: the circom circuit file target of the ceremony
@@ -62,3 +57,10 @@ It also will create the ceremony branch, commit and push these files to this bra
 
 A Github action will compile the circuit and generate the first contribution in the `{ceremony_name}` branch. This Github will also create an Pull Request assigned to you. If this PR is closed by you (without merge it), another Github action will be triggered that will finish the ceremony and generate the final artifacts.
 
+
+### Build
+
+```
+docker build . --target zk-voceremony -t zk-voceremony 
+docker build . --target zk-voceremony-create -t zk-voceremony-create
+```
