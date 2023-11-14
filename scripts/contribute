@@ -4,24 +4,9 @@ prompt_env_inputs() {
     echo "Welcome to the zk-voceremony contribution process!
     "
     echo "To start your contribution you need to provide the following information:"
-    echo " - Login to your GitHub account (including your github username and email to commit yout contribution)"
+    echo " - Login to your GitHub account (commits will use your github username)"
     echo " - The URL of the repository of the ceremony (by default 'https://github.com/vocdoni/zk-voceremony.git')"
     echo " - The name of the ceremony (used to name the ceremony branch)"
-
-    while true; do
-        read -p "Enter yout Github username: " CONTRIBUTOR_NAME
-        # Check if the alias is not empty
-        if [ -n "$CONTRIBUTOR_NAME" ]; then
-            break
-        fi
-    done
-    while true; do
-        read -p "Enter yout Github email: " CONTRIBUTOR_EMAIL
-        # Check if the alias is not empty
-        if [ -n "$CONTRIBUTOR_EMAIL" ]; then
-            break
-        fi
-    done
 
     GITHUB_REPO_URL="https://github.com/vocdoni/zk-voceremony.git"
     read -p "Enter the url of the repo (by default 'https://github.com/vocdoni/zk-voceremony.git'): " REPO_URL
@@ -30,28 +15,27 @@ prompt_env_inputs() {
     fi
     # get the access token
     gh auth login -p https -h github.com -w
-    # clone the ceremony branch
-    echo "Cloning ceremony branch..."
-    gh repo clone $GITHUB_REPO_URL ./ceremony
-    cd ./ceremony
-    # set up user identity
-    git config user.name $CONTRIBUTOR_NAME
-    git config user.email $CONTRIBUTOR_EMAIL
     # list on-going ceremonies
-    gh pr list -l on-going-ceremony
+    branches="$(gh pr list -R $GITHUB_REPO_URL -l on-going-ceremony --json headRefName --jq '.[].headRefName')"
     echo
-    while true; do
-        read -p "Enter the name of one of the 'on-going' ceremonies and branches shown above: " CEREMONY_BRANCH
-        # Check if the alias is not empty
-        if [ -n "$CEREMONY_BRANCH" ]; then
-            break
-        fi
-    done
+    echo $branches
+    echo
+    CEREMONY_BRANCH="$(echo "$branches" | head -n 1)"
+    read -p "Enter the name of one of the 'on-going' ceremonies and branches shown above (default $CEREMONY_BRANCH): " BRANCH
+    if [ -n "$BRANCH" ]; then
+        CEREMONY_BRANCH="$BRANCH"
+    fi
+    # clone the ceremony branch, shallow and without LFS (it will be pulled later)
+    echo "Cloning ceremony branch $CEREMONY_BRANCH (this might take a while)..."
+    git config --global lfs.fetchinclude none
+    gh repo clone $GITHUB_REPO_URL ./ceremony -- --branch $CEREMONY_BRANCH --depth 1
+    cd ./ceremony
+    . ceremony.env
+    # set up user identity
+    CONTRIBUTOR_NAME="$(gh api user --jq '.login')"
+    git config user.name $CONTRIBUTOR_NAME
+    git config user.email $CONTRIBUTOR_NAME@users.noreply.github.com
 
-    git checkout $CEREMONY_BRANCH
-    git pull origin $CEREMONY_NAME
-    git lfs fetch
-    git lfs pull
     echo
     read -p "Okey! Let's start. Press enter to continue..."
     . scripts/tools.sh
@@ -67,13 +51,14 @@ check_contribute_env() {
         LAST_CONTRIBUTION_HASH=$(get_last_contribution_hash)
     fi
 
-    CURRENT_CONTRIBUTION_FILENAME=${CIRCUIT_FILENAME}_${CONTRIBUTOR_NAME}.zkey
-    counter=0
-    while [ -e "$CONTRIBUTIONS_PATH/$CURRENT_CONTRIBUTION_FILENAME" ]; do
-        counter=$((counter + 1))
-        CURRENT_CONTRIBUTION_FILENAME="${CURRENT_CONTRIBUTION_FILENAME%.*}_${counter}.${CURRENT_CONTRIBUTION_FILENAME##*.}"
-    done
-    CURRENT_CONTRIBUTION_FILE="$CONTRIBUTIONS_PATH/$CURRENT_CONTRIBUTION_FILENAME"
+    CURRENT_CONTRIBUTION_FILE="$CONTRIBUTIONS_PATH/${CIRCUIT_FILENAME}_${CONTRIBUTOR_NAME}.zkey"
+    if [ -e "$CURRENT_CONTRIBUTION_FILE" ]; then
+        echo "You've already contributed to this zk-voceremony in file $CURRENT_CONTRIBUTION_FILE"
+        echo "Contributing more than once is not allowed. Aborting..."
+        exit 1
+    fi
+    git config lfs.fetchinclude "${LAST_CONTRIBUTION_FILE##./}"
+    git lfs pull
 
     echo
     echo "Welcome to the '$CEREMONY_BRANCH' zk-voceremony contribution process!
