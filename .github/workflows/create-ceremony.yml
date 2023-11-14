@@ -3,8 +3,8 @@ on:
   create
 jobs:
   compile-and-prepare:
-    runs-on: ubuntu-latest
     if: ${{ startsWith(github.ref, 'ceremony/') }}
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout the repository
       uses: actions/checkout@v4

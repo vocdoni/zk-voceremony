@@ -49,27 +49,13 @@ clean-creation:
 	$(info Cleaning up...)
 	@docker rmi zk-voceremony-creator-image -f
 
-pull-to-contribute:
-	$(info Pulling latest changes...)
-	@git fetch origin $(CEREMONY_BRANCH)
-	@git checkout $(CEREMONY_BRANCH)
-	@git pull origin $(CEREMONY_BRANCH)
-	@git lfs pull
+verify-last-contribution:
+	@docker build -q -t zk-voceremony-verifier-image -f ./dockerfiles/verify-contribution.dockerfile .
+	@docker run --rm --name zk-voceremony-verifier -qt --env-file ./ceremony.env zk-voceremony-verifier-image
 
-launch-contribution:
-	$(info Starting docker container...)
-	@docker build -q -t zk-voceremony-contributor-image -f ./dockerfiles/contribute-ceremony.dockerfile .
-	@docker run --rm --name zk-voceremony-contributor -qit -v ./:/app --env-file ./ceremony.env zk-voceremony-contributor-image
-
-push-contribution:
-	$(info Pushing changes...)
-	@git add $(CONTRIBUTIONS_PATH)/CONTRIBUTIONS.md ./$(CONTRIBUTIONS_PATH)/*.zkey
-	@git commit -m "New contribution"
-	@git push origin $(CEREMONY_BRANCH)
-
-clean-contribution:
+clean-last-verify:
 	$(info Cleaning up...)
-	@docker rmi zk-voceremony-contributor-image -f
+	@docker rmi zk-voceremony-verifier-image -f
 
 launch-finish-ceremony:
 	$(info Starting docker container...)
@@ -96,8 +82,8 @@ create-locally: global-checks on-going-ceremony-check launch-creation clean-crea
 finish: global-checks on-going-ceremony-check launch-finish-ceremony clean-finish-ceremony push-finish-ceremony
 	$(info Done!)
 
-finish-locally: global-checks on-going-ceremony-check launch-finish-ceremony clean-finish-ceremony
+verify-locally: global-checks on-going-ceremony-check verify-last-contribution clean-last-verify
 	$(info Done!)
 
-contribute: global-checks on-going-ceremony-check check-contribute-dependencies pull-to-contribute launch-contribution push-contribution clean-contribution
-	$(info Done! Thanks for contributing! You can remove this repo.)
+finish-locally: global-checks on-going-ceremony-check launch-finish-ceremony clean-finish-ceremony
+	$(info Done!)

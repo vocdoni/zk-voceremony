@@ -1,0 +1,16 @@
+name: Create ceremony
+on: push
+jobs:
+  compile-and-prepare:
+    if: ${{ startsWith(github.ref, 'ceremony/') }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the repository
+      uses: actions/checkout@v4
+      with:
+        lfs: true
+        ref: ${{ github.ref }}
+    - name: Checkout LFS objects
+      run: git lfs checkout
+    - name: Run toolkit
+      run: make verify-locally

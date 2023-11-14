@@ -22,6 +22,8 @@ check_create_env() {
 
 compile_circuit() {
 	log "compile the target citcuit to get the r1cs file"
+	# include the npm global modules in the node_modules folder support circom 
+	# imports from root
 	ln -s "$(npm root -g)" /node_modules
 	# compilling the circuit
 	$CIRCOM $CIRCUIT_PATH --r1cs --wasm -o $CONTRIBUTIONS_PATH

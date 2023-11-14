@@ -28,7 +28,6 @@ prompt_env_inputs() {
     if [ -n "$REPO_URL" ]; then
         GITHUB_REPO_URL=$REPO_URL
     fi
-
     # get the access token
     gh auth login -p https -h github.com -w
     # clone the ceremony branch
