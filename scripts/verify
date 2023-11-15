@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. scripts/tools.sh
+. /bin/tools.sh
 
 check_last_contribution_env() {
     # get the last contribution zkey file from the contributions file

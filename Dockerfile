@@ -45,4 +45,4 @@ RUN mkdir -p /temp && cd /temp && \
 
 COPY ./scripts/* /bin/
 
-CMD [ "create" ]
+CMD [ "create", "-y" ]

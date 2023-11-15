@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. scripts/tools.sh
+. /bin/tools.sh
 
 check_finish_env() {
 	echo -e "Welcome to the '$CEREMONY_BRANCH' zk-voceremony ends process!\n"

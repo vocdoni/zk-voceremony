@@ -13,7 +13,9 @@ jobs:
     - name: Checkout LFS objects
       run: git lfs checkout
     - name: Run toolkit
-      run: make create-locally unattended=true
+      run: |
+        docker build -q -t vocdoni/zk-voceremony-create --target zk-voceremony-create .
+        docker run --rm -it -q -v ./:/app --env-file ./ceremony.env vocdoni/zk-voceremony-create 
     - name: Commit ceremony artifacts
       uses: stefanzweifel/git-auto-commit-action@v5
       env:

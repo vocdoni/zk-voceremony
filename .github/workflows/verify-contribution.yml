@@ -13,4 +13,6 @@ jobs:
     - name: Checkout LFS objects
       run: git lfs checkout
     - name: Run toolkit
-      run: make verify-locally
+      run: |
+        docker build -q -t vocdoni/zk-voceremony --target zk-voceremony .
+        docker run --rm -it vocdoni/zk-voceremony verify

@@ -15,7 +15,9 @@ jobs:
     - name: Checkout LFS objects
       run: git lfs checkout
     - name: Run toolkit
-      run: make finish-locally
+      run: |
+        docker build -q -t vocdoni/zk-voceremony --target zk-voceremony .
+        docker run --rm -qt -v ./:/app --env-file ./ceremony.env vocdoni/zk-voceremony finish
     - name: Commit ceremony artifacts
       uses: stefanzweifel/git-auto-commit-action@v5
       env:

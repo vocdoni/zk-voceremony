@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 prompt_env_inputs() {
     echo "Welcome to the zk-voceremony contribution process!
     "
@@ -38,7 +39,7 @@ prompt_env_inputs() {
 
     echo
     read -p "Okey! Let's start. Press enter to continue..."
-    . scripts/tools.sh
+    . /bin/tools.sh
 }
 
 check_contribute_env() {
