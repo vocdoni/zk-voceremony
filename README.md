@@ -47,7 +47,8 @@ And will update:
 ### Create a new zk-ceremony
 **A.** Run the following command to prepare the environment:
 ```sh
-docker run --rm -it zk-voceremony
+git clone https://github.com/vocdoni/zk-voceremony.git && cd ./zk-voceremony
+bash ./scripts/create-env.sh
 ```
 This will create the `ceremony.env` following the `example.env` template, asking to you the required inputs. Then it will copy from your filesystem into the repo:
  * `{INPUTS_PATH}/{circuite_name}.circom`: the circom circuit file target of the ceremony
@@ -57,8 +58,9 @@ It also will create the ceremony branch, commit and push these files to this bra
 
 A Github action will compile the circuit and generate the first contribution in the `{ceremony_name}` branch. This Github will also create an Pull Request assigned to you. If this PR is closed by you (without merge it), another Github action will be triggered that will finish the ceremony and generate the final artifacts.
 
+### Other options
 
-### Build
+#### Build docker images locally
 
 ```
 docker build . --target zk-voceremony -t zk-voceremony 
