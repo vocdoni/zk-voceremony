@@ -20,7 +20,7 @@ You can read more about trusted zk ceremonies [here](https://zkproof.org/2021/06
 
 ## How to use the toolkit?
 
- - [Requirments](#requirements)
+ - [Requirements](#requirements)
  - [Contribute to a ceremony](#contribute-to-a-ceremony)
  - [Create a new zk-ceremony](#create-a-new-zk-ceremony)
 
@@ -36,6 +36,7 @@ You can read more about trusted zk ceremonies [here](https://zkproof.org/2021/06
 **A.** Clone the repository and checkout the branch with the name of the desired ceremony:
 ```sh
 git clone git@github.com:vocdoni/zk-voceremony.git
+cd zk-voceremony
 git checkout {CEREMONY_BRANCH}
 ```
 
@@ -62,3 +63,26 @@ It also will create the ceremony branch, commit and push these files to this bra
 
 A Github action will compile the circuit and generate the first contribution in the `{ceremony_name}` branch. This Github will also create an Pull Request assigned to you. If this PR is closed by you (without merge it), another Github action will be triggered that will finish the ceremony and generate the final artifacts.
 
+## Troubleshooting
+
+### `make contribute` fails with `git: 'lfs' is not a git command. See 'git --help'.`
+
+You need **Git LFS installed and initialized**, get it at https://git-lfs.com/
+    
+### `make contribute` fails with `Commits must have valid signatures`
+
+If you get this:
+```
+remote: error: GH006: Protected branch update failed for refs/heads/testing-ceremony.
+remote: error: Commits must have valid signatures.
+To github.com:vocdoni/zk-voceremony.git
+ ! [remote rejected] testing-ceremony -> testing-ceremony (protected branch hook declined)
+error: failed to push some refs to 'github.com:vocdoni/zk-voceremony.git'
+make: *** [Makefile:68: push-contribution] Error 1
+```
+You need to configure Git to [sign your commits](https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits)
+
+Also note that you'll need to discard your unsigned commit by doing
+```
+git reset --hard origin/$(git branch --show-current)
+```
