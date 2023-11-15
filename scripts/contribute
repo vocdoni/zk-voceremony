@@ -19,6 +19,8 @@ prompt_env_inputs() {
     # list on-going ceremonies
     branches="$(gh pr list -R $GITHUB_REPO_URL -l on-going-ceremony --json headRefName --jq '.[].headRefName')"
     echo
+    echo "Current on-going ceremonies:"
+    echo
     echo $branches
     echo
     CEREMONY_BRANCH="$(echo "$branches" | head -n 1)"
@@ -27,7 +29,9 @@ prompt_env_inputs() {
         CEREMONY_BRANCH="$BRANCH"
     fi
     # clone the ceremony branch, shallow and without LFS (it will be pulled later)
+    echo
     echo "Cloning ceremony branch $CEREMONY_BRANCH (this might take a while)..."
+    echo
     git config --global lfs.fetchinclude none
     gh repo clone $GITHUB_REPO_URL ./ceremony -- --branch $CEREMONY_BRANCH --depth 1
     cd ./ceremony
@@ -39,6 +43,7 @@ prompt_env_inputs() {
 
     echo
     read -p "Okey! Let's start. Press enter to continue..."
+    echo
     . /bin/tools.sh
 }
 
@@ -58,12 +63,16 @@ check_contribute_env() {
         echo "Contributing more than once is not allowed. Aborting..."
         exit 1
     fi
+
+    echo
+    echo "Downloading artifacts..."
+    echo
     git config lfs.fetchinclude "${LAST_CONTRIBUTION_FILE##./}"
     git lfs pull
 
     echo
-    echo "Welcome to the '$CEREMONY_BRANCH' zk-voceremony contribution process!
-    "
+    echo "You are going to contribute to '$CEREMONY_BRANCH' zk-voceremony process!"
+    echo
     echo "Thanks $CONTRIBUTOR_NAME for your contribution!"
     echo " - You are using $LAST_CONTRIBUTION_FILE as last contribution file ($HASH: $LAST_CONTRIBUTION_HASH)"
     echo " - Your contribution will be saved in $CURRENT_CONTRIBUTION_FILE file"
@@ -75,9 +84,14 @@ check_contribute_env() {
 
 make_contribution() {
     $SNARKJS zkc $LAST_CONTRIBUTION_FILE $CURRENT_CONTRIBUTION_FILE
+    echo
 }
 
 append_hash_to_contributions() {
+    echo 
+    echo "Computing your contribution hash..."
+    echo
+
 	local contribution_hash=$(get_file_hash "$1")
 	local contribution_filepath=$(basename -- "$1")
 	local contribution_line="$contribution_filepath:$contribution_hash"
@@ -99,9 +113,15 @@ append_hash_to_contributions() {
 }
 
 publish_contribution() {
+    echo 
+    echo "Uploading and committing your contribution..."
+    echo
     git add $CONTRIBUTIONS_FILE $CURRENT_CONTRIBUTION_FILE
 	git commit -m "New contribution"
 	git push origin $CEREMONY_BRANCH
+    echo
+    echo "Done! Your contribution has been published! Thanks for your contribution! :)"
+    echo
 }
 
 init_contribution() {
