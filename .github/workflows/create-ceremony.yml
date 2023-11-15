@@ -3,7 +3,7 @@ on:
   create
 jobs:
   compile-and-prepare:
-    if: ${{ startsWith(github.ref, 'ceremony/') }}
+    if: ${{ startsWith(github.ref_name, 'ceremony/') }}
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the repository
