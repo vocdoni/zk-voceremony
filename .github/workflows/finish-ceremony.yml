@@ -3,7 +3,7 @@ on:
   pull_request:
     types: [ closed ]
 jobs:
-  debug:
+  debug-action:
     runs-on: ubuntu-latest
     steps:
     - name: Dump event
@@ -11,26 +11,26 @@ jobs:
         echo "${{ toJson(github.event) }}"
         echo "${{ github.actor }}"
         echo "${{ github.ref_name }}"
-  finish-ceremony:
-    if: ${{ github.event.pull_request.merged == false && github.actor == github.event.pull_request.user.login && contains(github.event.pull_request.labels.*.name, 'on-going-ceremony') && startsWith(github.ref_name, 'ceremony/') }}
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout the repository
-      uses: actions/checkout@v4
-      with:
-        lfs: true
-        ref: ${{ github.event.pull_request.head.ref }}
-    - name: Checkout LFS objects
-      run: git lfs checkout
-    - name: Run toolkit
-      run: |
-        docker build -q -t vocdoni/zk-voceremony --target zk-voceremony .
-        docker run --rm -qt -v ./:/app --env-file ./ceremony.env vocdoni/zk-voceremony finish
-    - name: Commit ceremony artifacts
-      uses: stefanzweifel/git-auto-commit-action@v5
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        commit_message: Finish '${{ github.event.pull_request.head.ref }}' ceremony
-        commit_options: '--no-verify'
-        commit_user_name: ${{ github.actor }}
+  # finish-ceremony:
+  #   if: ${{ github.event.pull_request.merged == false && github.actor == github.event.pull_request.user.login && contains(github.event.pull_request.labels.*.name, 'on-going-ceremony') && startsWith(github.ref_name, 'ceremony/') }}
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Checkout the repository
+  #     uses: actions/checkout@v4
+  #     with:
+  #       lfs: true
+  #       ref: ${{ github.event.pull_request.head.ref }}
+  #   - name: Checkout LFS objects
+  #     run: git lfs checkout
+  #   - name: Run toolkit
+  #     run: |
+  #       docker build -q -t vocdoni/zk-voceremony --target zk-voceremony .
+  #       docker run --rm -qt -v ./:/app --env-file ./ceremony.env vocdoni/zk-voceremony finish
+  #   - name: Commit ceremony artifacts
+  #     uses: stefanzweifel/git-auto-commit-action@v5
+  #     env:
+  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #     with:
+  #       commit_message: Finish '${{ github.event.pull_request.head.ref }}' ceremony
+  #       commit_options: '--no-verify'
+  #       commit_user_name: ${{ github.actor }}
