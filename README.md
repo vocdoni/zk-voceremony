@@ -33,9 +33,10 @@ You can read more about trusted zk ceremonies [here](https://zkproof.org/2021/06
 
 ### Contribute to a ceremony
 
-**A.** You just need docker run, the image will clone this repository and guide you through the whole process
+You just need docker run, the image will clone this repository and guide you through the whole process:
+
 ```sh
-docker run --rm -it zk-voceremony
+docker run --rm -it vocdoni/zk-voceremony
 ```
 
 This will create:
@@ -45,7 +46,9 @@ And will update:
  * `{CONTRIBUTIONS_PATH}/CONTRIBUTIONS.md`: Add your contribution filename and checksum to the list of contributions and set it as the last contribution.
 
 ### Create a new zk-ceremony
-**A.** Run the following command to prepare the environment:
+
+Run the following command to prepare the environment:
+
 ```sh
 git clone https://github.com/vocdoni/zk-voceremony.git && cd ./zk-voceremony
 bash ./scripts/create-env.sh
