@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. scripts/tools.sh
+. /bin/tools.sh
 
 check_finish_env() {
 	echo -e "Welcome to the '$CEREMONY_BRANCH' zk-voceremony ends process!\n"
@@ -22,6 +22,14 @@ check_finish_env() {
 }
 
 finish_and_verify() {
+    if [ "$(get_file_hash "$LAST_CONTRIBUTION_FILE")" == "<check CONTRIBUTIONS.md file>" ]; then 
+        error "no contributions"
+        exit 1
+    fi
+    if [ "$(get_file_hash "$LAST_CONTRIBUTION_FILE")" != "$LAST_CONTRIBUTION_HASH" ]; then
+        error "the last contribution file has been modified, please check the CONTRIBUTIONS.md file"
+        exit 1
+    fi
     $SNARKJS zkey beacon $LAST_CONTRIBUTION_FILE $OUTPUT_PATH/${CIRCUIT_FILENAME}_proving_key.zkey 0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f 10 -n="Final Beacon phase2"
     $SNARKJS zkey verify $CONTRIBUTIONS_PATH/$CIRCUIT_FILENAME.r1cs $INPUT_PTAU_PATH $OUTPUT_PATH/${CIRCUIT_FILENAME}_proving_key.zkey 
     $SNARKJS zkey export verificationkey $OUTPUT_PATH/${CIRCUIT_FILENAME}_proving_key.zkey  $OUTPUT_PATH/${CIRCUIT_FILENAME}_verification_key.json

@@ -3,6 +3,7 @@ on:
   create
 jobs:
   compile-and-prepare:
+    if: ${{ startsWith(github.ref_name, 'ceremony/') }}
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the repository
@@ -12,7 +13,9 @@ jobs:
     - name: Checkout LFS objects
       run: git lfs checkout
     - name: Run toolkit
-      run: make create-locally unattended=true
+      run: |
+        docker build -q -t vocdoni/zk-voceremony-create --target zk-voceremony-create .
+        docker run --rm -qt -v ./:/app --env-file ./ceremony.env vocdoni/zk-voceremony-create 
     - name: Commit ceremony artifacts
       uses: stefanzweifel/git-auto-commit-action@v5
       env:
@@ -20,7 +23,7 @@ jobs:
       with:
         commit_message: Create '${{ github.ref }}' ceremony
         commit_options: '--no-verify'
-        commit_user_name: Voceremony Bot
+        commit_user_name: ${{ github.actor }}
     - name: Create PR to end ceremony
       run: gh pr create -B main -t "$PR_TITLE" -b "$PR_BODY" -l "$PR_LABELS" -a "$PR_ASSIGNEES"
       env:

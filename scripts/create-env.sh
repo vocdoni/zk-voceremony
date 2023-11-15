@@ -1,6 +1,6 @@
 
 ask_to_user() {
-    local asnwer=""
+    local answer=""
     if [ -n "$2" ]; then
         read -p "$1 " answer
         if [ -n "$answer" ]; then
@@ -23,12 +23,14 @@ ask_to_user() {
 }
 
 
-echo "\nThis script will create a ceremony.env file with the following content:
+echo "
+This script will create a ceremony.env file with the following content:
     * TARGET_CIRCUIT: the path to the circom circuit file
     * INPUT_PTAU: the path to the input ptau file
     * CEREMONY_BRANCH: the name of the ceremony (and its branch)
     * CONTRIBUTIONS_PATH: the path to the folder to store the contributions files
-    * OUTPUT_PATH: the path to the folder to store the resulting files\n"
+    * OUTPUT_PATH: the path to the folder to store the resulting files
+"
 
 input_folder=`ask_to_user "Please enter the path to the folder to store the inputs files (by default './inputs'): " "./inputs"`
 mkdir -p $input_folder
@@ -56,11 +58,11 @@ cp $input_ptau $input_folder/$ptau_file
 
 echo "TARGET_CIRCUIT=$input_folder/$circuit_file
 INPUT_PTAU=$input_folder/$ptau_file
-CEREMONY_BRANCH=$ceremony_branch
+CEREMONY_BRANCH=ceremony/$ceremony_branch
 CONTRIBUTIONS_PATH=$contributions_path
 OUTPUT_PATH=$output_path" > ceremony.env
 
-git checkout -b $ceremony_branch
+git checkout -b ceremony/$ceremony_branch
 git add -f ceremony.env $input_folder/$circuit_file $input_folder/$ptau_file
 git commit -m "Initialize ceremony"
-git push origin $ceremony_branch
+git push origin ceremony/$ceremony_branch
