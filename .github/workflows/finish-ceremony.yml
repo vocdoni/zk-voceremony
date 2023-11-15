@@ -11,8 +11,10 @@ jobs:
         echo "${{ toJson(github.event) }}"
         echo "${{ github.actor }}"
         echo "${{ github.ref_name }}"
+        echo "${{ github.event.pull_request.merged }}"
+        echo "${{ github.event.pull_request.head.ref }}"
   # finish-ceremony:
-  #   if: ${{ github.event.pull_request.merged == false && github.actor == github.event.pull_request.user.login && contains(github.event.pull_request.labels.*.name, 'on-going-ceremony') && startsWith(github.ref_name, 'ceremony/') }}
+  #   if: ${{ github.event.pull_request.merged == false && github.actor == github.event.pull_request.user.login && contains(github.event.pull_request.labels.*.name, 'on-going-ceremony') && startsWith(github.event.pull_request.head.ref, 'ceremony/') }}
   #   runs-on: ubuntu-latest
   #   steps:
   #   - name: Checkout the repository
