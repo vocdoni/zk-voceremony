@@ -15,4 +15,4 @@ jobs:
     - name: Run toolkit
       run: |
         docker build -q -t vocdoni/zk-voceremony --target zk-voceremony .
-        docker run --rm -it vocdoni/zk-voceremony verify
+        docker run --rm -qt vocdoni/zk-voceremony verify

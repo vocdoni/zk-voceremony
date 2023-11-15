@@ -15,7 +15,7 @@ jobs:
     - name: Run toolkit
       run: |
         docker build -q -t vocdoni/zk-voceremony-create --target zk-voceremony-create .
-        docker run --rm -it -q -v ./:/app --env-file ./ceremony.env vocdoni/zk-voceremony-create 
+        docker run --rm -qt -v ./:/app --env-file ./ceremony.env vocdoni/zk-voceremony-create 
     - name: Commit ceremony artifacts
       uses: stefanzweifel/git-auto-commit-action@v5
       env:
