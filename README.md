@@ -20,7 +20,7 @@ You can read more about trusted zk ceremonies [here](https://zkproof.org/2021/06
 
 ## How to use the toolkit?
 
- - [Requirments](#requirements)
+ - [Requirements](#requirements)
  - [Contribute to a ceremony](#contribute-to-a-ceremony)
  - [Create a new zk-ceremony](#create-a-new-zk-ceremony)
 
