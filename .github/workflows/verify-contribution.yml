@@ -1,8 +1,10 @@
-name: Create ceremony
-on: push
+name: Verify contribution
+on: 
+  push:
+    branches:
+      - ceremony/*
 jobs:
   compile-and-prepare:
-    if: ${{ startsWith(github.ref_name, 'ceremony/') }}
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the repository
@@ -15,4 +17,4 @@ jobs:
     - name: Run toolkit
       run: |
         docker build -q -t vocdoni/zk-voceremony --target zk-voceremony .
-        docker run --rm -qt vocdoni/zk-voceremony verify
+        docker run --rm -qt --env-file ./ceremony.env vocdoni/zk-voceremony verify
