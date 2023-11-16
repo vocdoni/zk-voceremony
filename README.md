@@ -27,9 +27,8 @@ You can read more about trusted zk ceremonies [here](https://zkproof.org/2021/06
 ### Requirements 
 
 * **Git and a Github account** with permissions push to non main branches of this repository. The process will be stored and tracked in a branch of the current GitHub repository. A verified signature must be configured with git to sign the resulting commits.
-* **Git LFS installed and initialized** to track large files like contribution files.
 * **Docker**: The toolkit uses docker containers to avoid installing dependencies on the host machine and to avoid incompatibilities.
-* **Makefile**: As a CLI. It performs some checks such as if the previous dependencies are available or if the user have the correct environment in every process stage. 
+* **Git LFS installed and initialized (only to create a ceremony)** to track large files like contribution files.
 
 ### Contribute to a ceremony
 
