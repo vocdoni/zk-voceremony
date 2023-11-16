@@ -7,10 +7,12 @@
 
 /* Body and Overall Layout */
 body {
-    background-color: #1a1a1a;
+    background-color: #000;
     color: #d0d0d0;
     font-family: 'Courier New', Courier, monospace;
     line-height: 1.6;
+    font-size: 24px;
+    color: #fff;
 }
 
 /* Container for Centering Content */
@@ -23,6 +25,7 @@ body {
 
 .list-container {
     margin-left: 40px;
+    padding:10px 40px !important;
 }
 
 /* Image Styling */
@@ -42,34 +45,43 @@ img {
     color: #4caf50;
     text-decoration: none;
     margin: 0 10px;
-    font-size: 1.2em;
+    font-size: 20px;
 }
 
 .social-links a:hover {
-    color: #81c784;
+    color: #0053ff;
 }
 
 /* Typography and Spacing */
 h1 {
-    color: black;
+    color: white;
     margin-bottom: 10px;
 }
 
 h2 {
-    color: #80deea;
+    color: #4AF626;
     margin-bottom: 10px;
 }
 
 
 .container div {
-    background-color: #263238;
-    padding: 15px;
+    background-color: #000;
+    padding: 30px;
     margin-bottom: 20px;
     border-left: 4px solid #4caf50;
+    padding-left: 35px;
 }
 
-p, ul, ol, pre {
+ul, ol, pre {
     margin-bottom: 15px;
+}
+
+p {
+    margin-bottom: 35px;
+}
+
+ol {
+    margin-left: 20px;
 }
 
 pre {
