@@ -9,7 +9,7 @@
 body {
     background-color: #000;
     color: #d0d0d0;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: 'Inconsolata', 'Courier New', Courier, monospace;
     line-height: 1.6;
     font-size: 24px;
     color: #fff;
@@ -87,8 +87,17 @@ ol {
 pre {
     white-space: pre-wrap;
     word-wrap: break-word;
-    background-color: transparent;
+    background-color: #333;
+    padding: 0.8em;
+    font-size: 0.8em;
     border-left: none;
+}
+
+pre::before {
+    content: '$>';
+    display: inline-block;
+    margin-right: 10px;
+    color: #4caf50;
 }
 
 /* Responsive Design */
