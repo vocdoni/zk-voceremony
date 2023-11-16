@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - main
+    tags:
+      - v*
 jobs:
   docker_release:
     name: Publish images

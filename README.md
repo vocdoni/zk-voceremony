@@ -45,6 +45,10 @@ This will create:
 And will update:
  * `{CONTRIBUTIONS_PATH}/CONTRIBUTIONS.md`: Add your contribution filename and checksum to the list of contributions and set it as the last contribution.
 
+#### Checkout a demo of a contribution process
+
+![Contribution demo](./contribute-demo.gif)
+
 ### Create a new zk-ceremony
 
 Run the following command to prepare the environment:
