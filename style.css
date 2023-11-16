@@ -1,0 +1,93 @@
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body and Overall Layout */
+body {
+    background-color: #1a1a1a;
+    color: #d0d0d0;
+    font-family: 'Courier New', Courier, monospace;
+    line-height: 1.6;
+}
+
+/* Container for Centering Content */
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.list-container {
+    margin-left: 40px;
+}
+
+/* Image Styling */
+img {
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+/* Social Links Style */
+.social-links {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.social-links a {
+    color: #4caf50;
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 1.2em;
+}
+
+.social-links a:hover {
+    color: #81c784;
+}
+
+/* Typography and Spacing */
+h1 {
+    color: black;
+    margin-bottom: 10px;
+}
+
+h2 {
+    color: #80deea;
+    margin-bottom: 10px;
+}
+
+
+.container div {
+    background-color: #263238;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-left: 4px solid #4caf50;
+}
+
+p, ul, ol, pre {
+    margin-bottom: 15px;
+}
+
+pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    background-color: transparent;
+    border-left: none;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .container {
+        width: 95%;
+    }
+
+    .social-links a {
+        margin: 0 5px;
+        font-size: 1em;
+    }
+}
+

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vocdoni zk Ceremony</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div style="background-color: #d0d0d0; text-align: center; padding: 0px;">
+            <img src="logo.png" alt="Vocdoni Logo" style="max-width: 400px;">
+        <h1>Anonymous voting zk Ceremony</h1>
+        </div>
+
+        <div class="social-links">
+            <a href="https://twitter.com/vocdoni" target="_blank">Twitter</a> |
+            <a href="https://github.com/vocdoni" target="_blank">GitHub</a> |
+            <a href="mailto:info@vocdoni.io">Email</a> |
+            <a href="https://vocdoni.io" target="_blank">Website</a>
+        </div>
+
+        <div>
+            <h2>About Vocdoni</h2>
+            <p>Vocdoni is a groundbreaking protocol offering universally verifiable, censorship-resistant, and anonymous self-sovereign governance. Designed for scalability and ease-of-use, Vocdoni caters to a wide range of voting needs.</p>
+            <p>Our mission is to facilitate a trustless voting system where every voice can be heard and every vote audited. We are committed to building the foundational blocks for a permissionless, private, and censorship-resistant democracy.</p>
+            <p>Utilizing zkSNARKS - a cutting-edge privacy technology - the Vocdoni protocol ensures secure and private voting within a distributed network. To enhance this security, we invite you to participate in our ZK ceremony.</p>
+        </div>
+
+        <div>
+            <h2>The zk Ceremony</h2>
+            <p>The zk ceremony, also known as a trusted ceremony, is a multi-party computation process crucial for securely and reliably generating the inputs needed for a zk snark circuit. This process results in two keys:</p>
+            <div class="list-container">
+            <ul>
+                <li><strong>The Proving Key:</strong> Enables the generation of zk proofs for the specific circuit.</li>
+                <li><strong>The Verifying Key:</strong> Allows for the verification of these proofs.</li>
+            </ul>
+	    </div>
+            <p>This ceremony also produces 'toxic waste' - data that must be discarded to prevent the creation of false proofs. The multi-party computation approach minimizes risks by involving multiple participants.</p>
+            <p>Each participant contributes sequentially, starting from an initial contribution made at the ceremony's inception.</p>
+            <p><strong>Security is assured as long as at least one participant remains honest.</strong></p>
+        </div>
+
+        <div>
+            <h2>Participation Guidelines</h2>
+            <p>To take part in the zk ceremony, ensure you have:</p>
+            <div class="list-container">
+                <ol>
+                    <li>An active GitHub account.</li>
+                    <li>Docker installed and operational on your system.</li>
+                </ol>
+            </div>
+            <p>Begin by running the following command in your terminal:</p>
+            <pre>docker run --rm -it vocdoni/zk-voceremony</pre>
+            <p>Then, simply follow the on-screen instructions.</p>
+        </div>
+        <img src="contribute-demo.gif" alt="demo" style="max-width: 800px;">
+    </div>
+</body>
+</html>
+
