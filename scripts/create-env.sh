@@ -32,6 +32,10 @@ This script will create a ceremony.env file with the following content:
     * OUTPUT_PATH: the path to the folder to store the resulting files
 "
 
+if ! command -v git-lfs &> /dev/null; then
+    echo "Git LFS is not installed. Please install and run 'git lfs install' before running this script."
+fi
+
 input_folder=`ask_to_user "Please enter the path to the folder to store the inputs files (by default './inputs'): " "./inputs"`
 mkdir -p $input_folder
 
@@ -52,9 +56,9 @@ contributions_path=`ask_to_user "Please enter the path to the folder to store th
 output_path=`ask_to_user "Please enter the path to the folder to store the resulting files (by default './results'): " "./results"`
 
 circuit_file=$(basename -- "$target_circuit")
-cp $target_circuit $input_folder/$circuit_file
 ptau_file=$(basename -- "$input_ptau")
-cp $input_ptau $input_folder/$ptau_file
+cp $target_circuit $input_folder/$circuit_file && \
+    cp $input_ptau $input_folder/$ptau_file
 
 echo "TARGET_CIRCUIT=$input_folder/$circuit_file
 INPUT_PTAU=$input_folder/$ptau_file
@@ -62,7 +66,7 @@ CEREMONY_BRANCH=ceremony/$ceremony_branch
 CONTRIBUTIONS_PATH=$contributions_path
 OUTPUT_PATH=$output_path" > ceremony.env
 
-git checkout -b ceremony/$ceremony_branch
-git add -f ceremony.env $input_folder/$circuit_file $input_folder/$ptau_file
-git commit -m "Initialize ceremony"
-git push origin ceremony/$ceremony_branch
+git checkout -b ceremony/$ceremony_branch && \
+    git add -f ceremony.env $input_folder/$circuit_file $input_folder/$ptau_file && \
+    git commit -m "Initialize ceremony" && \
+    git push origin ceremony/$ceremony_branch
