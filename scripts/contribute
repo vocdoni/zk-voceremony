@@ -62,7 +62,10 @@ prompt_env_inputs() {
     fi
     echo
     echo "Now you need to login to your GitHub account to authenticate the process."
-    echo "During this process, you will be asked to login to your GitHub account using your browser. The script will try to open your default browser, but it will fail. Don't worry, just copy the URL shown in the terminal and paste it in your browser. Then, copy the code shown in the browser and paste it in the terminal."
+    echo " - During this process, you will be asked to login to your GitHub account using your browser."
+    echo " - The script will try to open your default browser, but it will fail."
+    echo " - Don't worry, just copy the URL shown in the terminal and paste it in your browser."
+    echo "Then, copy the code shown in the terminal and paste it in the browser."
     echo
 
     # get the access token
@@ -117,12 +120,12 @@ check_contribute_env() {
 
     echo
     echo "Downloading artifacts..."
-    echo
     git config lfs.fetchinclude "${LAST_CONTRIBUTION_FILE##./}"
     git lfs pull
 
     echo
-    echo "You are going to contribute to '$CEREMONY_BRANCH' zk-voceremony process!"
+    echo "
+You are going to contribute to '$CEREMONY_BRANCH' zk-voceremony process!"
     echo
     echo "Thanks $CONTRIBUTOR_NAME for your contribution!"
     echo " - You are using $LAST_CONTRIBUTION_FILE as last contribution file ($HASH: $LAST_CONTRIBUTION_HASH)"
@@ -135,7 +138,8 @@ check_contribute_env() {
 
 make_contribution() {
     CONTRIBUTION_RANDOM_INPUT=`ask_to_user "Please enter a random input and press enter:"`
-    echo "Your random input is: $CONTRIBUTION_RANDOM_INPUT. Do you want to proceed? (y/n)"
+    echo "Your random input is: '$CONTRIBUTION_RANDOM_INPUT'."
+    echo "Do you want to proceed? (y/n)"
     read confirmation
     if [ "$confirmation" != "y" ]; then
         exit 0
