@@ -60,6 +60,11 @@ prompt_env_inputs() {
     if [ -n "$REPO_URL" ]; then
         GITHUB_REPO_URL=$REPO_URL
     fi
+    echo
+    echo "Now you need to login to your GitHub account to authenticate the process."
+    echo "During this process, you will be asked to login to your GitHub account using your browser. The script will try to open your default browser, but it will fail. Don't worry, just copy the URL shown in the terminal and paste it in your browser. Then, copy the code shown in the browser and paste it in the terminal."
+    echo
+
     # get the access token
     gh auth login -p https -h github.com -w
     # list on-going ceremonies
@@ -129,7 +134,16 @@ check_contribute_env() {
 }
 
 make_contribution() {
-    $SNARKJS zkc $LAST_CONTRIBUTION_FILE $CURRENT_CONTRIBUTION_FILE
+    CONTRIBUTION_RANDOM_INPUT=`ask_to_user "Please enter a random input and press enter:"`
+    echo "Your random input is: $CONTRIBUTION_RANDOM_INPUT. Do you want to proceed? (y/n)"
+    read confirmation
+    if [ "$confirmation" != "y" ]; then
+        exit 0
+    fi
+    echo
+    echo "The generation of the contribution will take a while... So, be patient and don't close the terminal until the process is finished."
+    echo
+    $SNARKJS zkc $LAST_CONTRIBUTION_FILE $CURRENT_CONTRIBUTION_FILE -e="$CONTRIBUTION_RANDOM_INPUT"
     echo
 }
 
@@ -166,7 +180,13 @@ publish_contribution() {
 	git commit -m "New contribution"
 	git push origin $CEREMONY_BRANCH
     echo
-    echo "Done! Your contribution has been published! Thanks for your contribution! :)"
+    echo "Done! Your contribution has been published!"
+    echo
+    echo "Last but not least, help us to get more contributors by sharing the following tweet:
+
+'I participated in the @vocdoni zk ceremony at https://zk.vocdoni.io/ to contribute towards securing anonymous voting.'"
+    echo
+    echo "Thanks for your contribution! :)"
     echo
 }
 
