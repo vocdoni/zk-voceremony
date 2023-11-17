@@ -6,9 +6,10 @@
 ### Contributions
 ```
 census_initial_contribution.zkey:8540f55c142b3539d032a44012df97ba2d986c8fe67daa1cb47410cd1374224d95540c7cefd8f58d32d987e97935ab29a9a9dc57b800fabe4865106438f15d49
+census_lucasmenendez.zkey:24d25bdb5326210c4927f8a82da44ae3a378b1cd05c4c3b7218006db0292ad8f508af6f07882eba098b6a5cbe53c29d6d936643324010a33bcacada3b4b7d713
 ```
 
 ### Last contribution
 ```
-
+census_lucasmenendez.zkey:24d25bdb5326210c4927f8a82da44ae3a378b1cd05c4c3b7218006db0292ad8f508af6f07882eba098b6a5cbe53c29d6d936643324010a33bcacada3b4b7d713
 ```
