@@ -60,6 +60,8 @@ prompt_env_inputs() {
     if [ -n "$REPO_URL" ]; then
         GITHUB_REPO_URL=$REPO_URL
     fi
+    GITHUB_REPO_BASENAME=$(basename "$GITHUB_REPO_URL" .git)
+    GITHUB_REPO_NAME="${GITHUB_REPO_BASENAME##*/}"
     echo
     echo "Now you need to login to your GitHub account to authenticate the process."
     echo " - During this process, you will be asked to login to your GitHub account using your browser."
@@ -87,8 +89,10 @@ prompt_env_inputs() {
     echo "Cloning ceremony branch $CEREMONY_BRANCH (this might take a while)..."
     echo
     git config --global lfs.fetchinclude none
+
     gh repo clone $GITHUB_REPO_URL ./ceremony -- --branch $CEREMONY_BRANCH --depth 1
     cd ./ceremony
+    gh repo fork --remote=true
     . ceremony.env
     # set up user identity
     CONTRIBUTOR_NAME="$(gh api user --jq '.login')"
@@ -139,8 +143,7 @@ You are going to contribute to '$CEREMONY_BRANCH' zk-voceremony process!"
 make_contribution() {
     CONTRIBUTION_RANDOM_INPUT=`ask_to_user "Please enter a random input and press enter:"`
     echo "Your random input is: '$CONTRIBUTION_RANDOM_INPUT'."
-    echo "Do you want to proceed? (y/n)"
-    read confirmation
+    read -p "Do you want to proceed? (y/n) " confirmation
     if [ "$confirmation" != "y" ]; then
         exit 0
     fi
@@ -180,9 +183,10 @@ publish_contribution() {
     echo 
     echo "Uploading and committing your contribution..."
     echo
-    git add $CONTRIBUTIONS_FILE $CURRENT_CONTRIBUTION_FILE
-	git commit -m "New contribution"
-	git push origin $CEREMONY_BRANCH
+    git add $CONTRIBUTIONS_FILE $CURRENT_CONTRIBUTION_FILE && \
+        git commit -m "$CONTRIBUTOR_NAME contribution to '$CEREMONY_BRANCH' ceremony" && \
+        git push origin $CEREMONY_BRANCH && \
+        gh pr create --fill --base $CEREMONY_BRANCH -R $GITHUB_REPO_URL
     echo
     echo "Done! Your contribution has been published!"
     echo
