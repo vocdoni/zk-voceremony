@@ -1,10 +1,10 @@
 name: Verify contribution
 on: 
-  push:
+  pull_request:
     branches:
       - ceremony/*
 jobs:
-  compile-and-prepare:
+  verify-contribution:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the repository
@@ -18,3 +18,10 @@ jobs:
       run: |
         docker build -q -t vocdoni/zk-voceremony --target zk-voceremony .
         docker run --rm -qt --env-file ./ceremony.env vocdoni/zk-voceremony verify
+  merge-contribution:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Auto merge contribution PR
+      uses: "pascalgn/automerge-action@v0.15.6"
+      env:
+        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
