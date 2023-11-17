@@ -21,9 +21,6 @@ jobs:
     - name: Merge PR branch
       if: success() && contains(github.event.pull_request.labels.*.name, 'automerge')
       run: |
-        git config --global user.name "${{ github.actor }}"
-        git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-        git fetch origin ${{ github.base_ref }}
-        git checkout ${{ github.base_ref }}
-        git merge --no-ff ${{ github.head_ref }} -m "Automatically merging new contribution"
-        git push origin ${{ github.base_ref }}
+        gh pr merge --auto ${{ github.event.number }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
