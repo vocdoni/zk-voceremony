@@ -21,6 +21,6 @@ jobs:
     - name: Merge PR branch
       if: success() && contains(github.event.pull_request.labels.*.name, 'automerge')
       run: |
-        gh pr merge --admin ${{ github.event.number }}
+        gh pr merge --admin --merge ${{ github.event.number }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
