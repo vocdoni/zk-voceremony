@@ -1,0 +1,14 @@
+### Global artifacts
+- [r1cs](./artifacts/circuit.r1cs) - `8f10e11b9ec109130dcf17f5252d5f7a581b9e212acdba047e6657ac5fb9e9ca435ef3023bb6f031fca0fa5f91b481344b34b912222f4b73de704b7cf5dd30e3`
+- [wasm](./artifacts/circuit.wasm) - `2cc8be6a0044fca2cacce7362d4cd0f48038e151fc627e787216a84e20221a41395c7b87ced17c8ae4430a7dce1d74b1a3be0b1911304a7348b71b02e70e6e22`
+- [initial ptau](./artifacts/initial.ptau) - `d6a8fb3a04feb600096c3b791f936a578c4e664d262e4aa24beed1b7a9a96aa5eb72864d628db247e9293384b74b36ffb52ca8d148d6e1b8b51e279fdf57b583`
+
+### Contributions
+```
+test_initial_contribution.zkey:c3a3c61589dc373dcb940d748c24b0b3552203abd334415e580d3d64915363d59f32931c665c5ca1a9b6eb569f165ee7c964debca9b7783b874536e82fad4af3
+```
+
+### Last contribution
+```
+
+```
