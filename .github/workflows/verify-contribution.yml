@@ -32,7 +32,7 @@ jobs:
     - name: Merge PR branch
       if: success() && contains(github.event.pull_request.title, 'Contribution:')
       run: |
-        gh pr merge --admin --merge "$PR_URL"
+        gh pr merge --admin --rebase "$PR_URL"
       env:
         PR_URL: ${{github.event.pull_request.html_url}}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

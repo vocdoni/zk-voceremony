@@ -141,16 +141,13 @@ You are going to contribute to '$CEREMONY_BRANCH' zk-voceremony process!"
 }
 
 make_contribution() {
-    CONTRIBUTION_RANDOM_INPUT=`ask_to_user "Please enter a random input and press enter:"`
-    echo "Your random input is: '$CONTRIBUTION_RANDOM_INPUT'."
-    read -p "Do you want to proceed? (y/n) " confirmation
-    if [ "$confirmation" != "y" ]; then
-        exit 0
-    fi
+    CONTRIBUTION_USER_INPUT=`ask_to_user "Please enter a random input and press enter:"`
+    echo "Your random input is: '$CONTRIBUTION_USER_INPUT'. Generating a random part..."
+    CONTRIBUTION_RANDOM_INPUT="${CONTRIBUTION_RANDOM_INPUT}\n$(head -n 2048 /dev/urandom)"
     echo
     echo "The generation of the contribution will take a while... So, be patient and don't close the terminal until the process is finished."
     echo
-    $SNARKJS zkc $LAST_CONTRIBUTION_FILE $CURRENT_CONTRIBUTION_FILE -e="$CONTRIBUTION_RANDOM_INPUT"
+    $SNARKJS zkc $LAST_CONTRIBUTION_FILE $CURRENT_CONTRIBUTION_FILE -e="$CONTRIBUTION_USER_INPUT$CONTRIBUTION_RANDOM_INPUT"
     echo
 }
 
@@ -187,8 +184,11 @@ publish_contribution() {
         git commit -m "Contribution: from $CONTRIBUTOR_NAME to '$CEREMONY_BRANCH' ceremony" && \
         git push origin $CEREMONY_BRANCH && \
         gh pr create --fill --base $CEREMONY_BRANCH -R $GITHUB_REPO_URL
-    echo
-    echo "Done! Your contribution has been published!"
+    [ $? -ne 0 ] && {
+        echo; echo "Error during the contribution process, please start it over or ask for support"
+    } || {
+        echo; echo "Done! Your contribution has been published!"
+    }
     echo
     echo "Last but not least, help us to get more contributors by sharing the following tweet:
 
