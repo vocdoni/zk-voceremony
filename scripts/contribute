@@ -1,5 +1,7 @@
 #!/bin/bash
 
+GITHUB_REPO="vocdoni/zk-voceremony"
+
 intro_message() {
     echo "
 
@@ -48,20 +50,36 @@ intro_message() {
     echo "Welcome to the zk-voceremony contribution process!"
     echo
     echo "To start your contribution you need to provide the following information:"
+    echo " - The github repository of the ceremony (by default '$GITHUB_REPO')"
     echo " - Login to your GitHub account (commits will use your github username)"
-    echo " - The URL of the repository of the ceremony (by default 'https://github.com/vocdoni/zk-voceremony.git')"
-    echo " - The name of the ceremony (used to name the ceremony branch)"
 }
 
 
 prompt_env_inputs() {
-    GITHUB_REPO_URL="https://github.com/vocdoni/zk-voceremony.git"
-    read -p "Enter the url of the repo (by default 'https://github.com/vocdoni/zk-voceremony.git'): " REPO_URL
+    read -p "Enter the name of the repo (by default '$GITHUB_REPO'): " REPO_URL
     if [ -n "$REPO_URL" ]; then
-        GITHUB_REPO_URL=$REPO_URL
+        GITHUB_REPO=$REPO_URL
     fi
-    GITHUB_REPO_BASENAME=$(basename "$GITHUB_REPO_URL" .git)
-    GITHUB_REPO_NAME="${GITHUB_REPO_BASENAME##*/}"
+
+    # list on-going ceremonies
+    branches="$(gh pr list -R $GITHUB_REPO -l on-going-ceremony --json headRefName --jq '.[].headRefName')"
+    echo
+    echo "Current on-going ceremonies:"
+    echo
+    echo "$branches"
+    echo
+    CEREMONY_BRANCH="$(echo "$branches" | head -n 1)"
+    read -p "Enter the name of one of the 'on-going' ceremonies and branches shown above (default $CEREMONY_BRANCH): " BRANCH
+    if [ -n "$BRANCH" ]; then
+        CEREMONY_BRANCH="$BRANCH"
+    fi
+
+    if curl -s -H "Accept: application/vnd.github.v3+json" "https://api.github.com/repos/$GITHUB_REPO/pulls" \
+    | jq '.[].title' | grep Contribution | grep $CEREMONY_BRANCH ; then
+      echo "Oh, look, there's someone right now uploading a contribution, wait a couple of minutes and try again"
+      exit 5
+    fi
+
     echo
     echo "Now you need to login to your GitHub account to authenticate the process."
     echo " - During this process, you will be asked to login to your GitHub account using your browser."
@@ -72,36 +90,37 @@ prompt_env_inputs() {
 
     # get the access token
     gh auth login -p https -h github.com -w
-    # list on-going ceremonies
-    branches="$(gh pr list -R $GITHUB_REPO_URL -l on-going-ceremony --json headRefName --jq '.[].headRefName')"
+
     echo
-    echo "Current on-going ceremonies:"
+    echo "Okey! Let's start. After you press enter, this script will fork the repo under your username,"
+    echo "open a PR against upstream, download required files, let you input your contribution (a random string),"
+    echo "and upload it to the PR. Noone else can contribute during this time, so you need to have fast, stable internet connection,"
+    echo "else your contribution process will fail due to an automatic timeout after a few minutes."
     echo
-    echo $branches
+    read -p "Press enter to continue..."
     echo
-    CEREMONY_BRANCH="$(echo "$branches" | head -n 1)"
-    read -p "Enter the name of one of the 'on-going' ceremonies and branches shown above (default $CEREMONY_BRANCH): " BRANCH
-    if [ -n "$BRANCH" ]; then
-        CEREMONY_BRANCH="$BRANCH"
-    fi
+
     # clone the ceremony branch, shallow and without LFS (it will be pulled later)
     echo
     echo "Cloning ceremony branch $CEREMONY_BRANCH (this might take a while)..."
     echo
     git config --global lfs.fetchinclude none
 
-    gh repo clone $GITHUB_REPO_URL ./ceremony -- --branch $CEREMONY_BRANCH --depth 1
+    gh repo fork --clone $GITHUB_REPO -- ./ceremony --branch $CEREMONY_BRANCH --depth 1
     cd ./ceremony
-    gh repo fork --remote=true
     . ceremony.env
     # set up user identity
     CONTRIBUTOR_NAME="$(gh api user --jq '.login')"
     git config user.name $CONTRIBUTOR_NAME
     git config user.email $CONTRIBUTOR_NAME@users.noreply.github.com
 
-    echo
-    read -p "Okey! Let's start. Press enter to continue..."
-    echo
+    touch .lock && git add .lock && git commit .lock -m "Prevent other contributions" && git push origin $CEREMONY_BRANCH
+
+    gh pr create --title "Contribution: from $CONTRIBUTOR_NAME to '$CEREMONY_BRANCH' ceremony" --body "" \
+        --base $CEREMONY_BRANCH --draft
+
+    git reset --hard HEAD~ # discard .lock commit
+
     . /bin/tools.sh
 }
 
@@ -187,9 +206,9 @@ publish_contribution() {
     echo "Uploading and committing your contribution..."
     echo
     git add $CONTRIBUTIONS_FILE $CURRENT_CONTRIBUTION_FILE && \
-        git commit -m "Contribution: from $CONTRIBUTOR_NAME to '$CEREMONY_BRANCH' ceremony" && \
-        git push origin $CEREMONY_BRANCH && \
-        gh pr create --fill --base $CEREMONY_BRANCH -R $GITHUB_REPO_URL
+        git commit -m "Contribution: from $CONTRIBUTOR_NAME to '$CEREMONY_BRANCH' ceremony" \
+        && git push -f origin $CEREMONY_BRANCH \
+        && gh pr ready
     [ $? -ne 0 ] && {
         echo; echo "Error during the contribution process, please start it over or ask for support"
         exit 1
