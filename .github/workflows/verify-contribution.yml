@@ -1,6 +1,6 @@
 name: Verify contribution
 on: 
-  pull_request:
+  pull_request_target:
     branches:
       - ceremony/*
 
@@ -12,6 +12,11 @@ jobs:
     steps:
     - name: Checkout the repository
       uses: actions/checkout@v4
+    - name: Build toolkit
+      run: |
+        docker build -q -t vocdoni/zk-voceremony --target zk-voceremony .
+    - name: Checkout the fork
+      uses: actions/checkout@v4
       with:
         lfs: true
         ref: ${{ github.ref }}
@@ -19,7 +24,6 @@ jobs:
       run: git lfs checkout
     - name: Run toolkit
       run: |
-        docker build -q -t vocdoni/zk-voceremony --target zk-voceremony .
         docker run --rm -qt -v ./:/app --env-file ./ceremony.env vocdoni/zk-voceremony verify
     - name: Merge PR branch
       if: success() && contains(github.event.pull_request.title, 'Contribution:')
