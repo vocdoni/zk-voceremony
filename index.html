@@ -52,26 +52,31 @@
                 </ol>
             </div>
             <p>Begin by running the following command in your terminal:</p>
-	    <!-- <pre>docker run --rm -it vocdoni/zk-voceremony</pre> -->
-	    <pre>WE ARE FIXING THE CEREMONY CONTRIBUTION PROCESS, WE DETECTED AN ISSUE. PLEASE VISIT THIS PAGE IN FEW HOURS.</pre>
+            <pre>docker run --rm -it vocdoni/zk-voceremony</pre>
             <p>Then, simply follow the on-screen instructions.</p>
-	    <p>This command will execute the following steps</p>
+
+            <p>Alternatively, it is possible to build the image directly from the dockerfile and run the same command using the locally built image:</p>
+            <span>Clone the repository</span>
+            <pre>git clone https://github.com/vocdoni/zk-voceremony.git && cd zk-voceremony</pre>
+            <span>Build the image locally</span>
+            <pre>docker build -t vocdoni/zk-voceremony . </pre>
+            <span>Run it</span>
+            <pre>docker run --rm -it vocdoni/zk-voceremony</pre>
+            <br/>
+            <p>Both options will execute the following steps:</p>
             <div class="list-container">
                 <ol>
                     <li>Download the docker image that contains all required software.</li>
                     <li>Get the last contribution from the remote repository.</li>
-		    <li>Create a new contribution with some random entropy.</li>
-		    <li>Ask for a Github code to authenticate.</li>
-		    <li>Fork and create a pull-request to the ceremony repository.</li>
-		    <li>An automatic CI action will verify your contribution and merge it.</li>
-		    <li>You are done! Thanks for your support.</li>
+                    <li>Create a new contribution with some random entropy.</li>
+                    <li>Ask for a Github code to authenticate.</li>
+                    <li>Fork and create a pull-request to the ceremony repository.</li>
+                    <li>An automatic CI action will verify your contribution and merge it.</li>
+                    <li>You are done! Thanks for your support.</li>
                 </ol>
             </div>
- 
             <p>You can follow the ceremony process and review the code <a href="https://github.com/vocdoni/zk-voceremony/tree/ceremony/vocdoni-zkcensus-ceremony" target="_blank">in its branch</a>.</p>
-	    
-	    <p>If you encounter an error on the final merge step <i>[rejected] failed to push some refs....</i>, please start the process anew. 
-	    This indicates that someone else has contributed before you. To proceed, you need to update your information and contribute again.</p>
+            <p>If you encounter an error on the final merge step <i>[rejected] failed to push some refs....</i>, please start the process anew. This indicates that someone else has contributed before you. To proceed, you need to update your information and contribute again.</p>
         </div>
         <img src="contribute-demo.gif" alt="demo" style="max-width: 1200px;border: 2px solid #ffffff78;margin-top: 20px;">
     </div>
