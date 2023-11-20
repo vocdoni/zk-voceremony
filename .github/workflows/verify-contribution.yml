@@ -23,7 +23,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         lfs: true
-        ref: ${{ github.ref }}
+        ref: ${{ github.event.pull_request.head.sha }}
     - name: Checkout LFS objects
       run: git lfs checkout
     - name: Run toolkit
