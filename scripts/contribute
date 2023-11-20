@@ -184,9 +184,9 @@ publish_contribution() {
     echo "Uploading and committing your contribution..."
     echo
     git add $CONTRIBUTIONS_FILE $CURRENT_CONTRIBUTION_FILE && \
-        git commit -m "$CONTRIBUTOR_NAME contribution to '$CEREMONY_BRANCH' ceremony" && \
+        git commit -m "Contribution: from $CONTRIBUTOR_NAME to '$CEREMONY_BRANCH' ceremony" && \
         git push origin $CEREMONY_BRANCH && \
-        gh pr create --fill --base $CEREMONY_BRANCH -R $GITHUB_REPO_URL -l automerge
+        gh pr create --fill --base $CEREMONY_BRANCH -R $GITHUB_REPO_URL
     echo
     echo "Done! Your contribution has been published!"
     echo
