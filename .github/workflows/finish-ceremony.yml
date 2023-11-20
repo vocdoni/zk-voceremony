@@ -19,6 +19,7 @@ jobs:
         docker build -q -t vocdoni/zk-voceremony --target zk-voceremony .
         docker run --rm -qt -v ./:/app --env-file ./ceremony.env vocdoni/zk-voceremony finish
     - name: Commit ceremony artifacts
+      if : ${{ success() }}
       uses: stefanzweifel/git-auto-commit-action@v5
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

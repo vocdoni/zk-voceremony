@@ -7,13 +7,12 @@ log() {
 # error function helps to print error messages
 error() {
 	echo "-- [ZK-VOCEREMONY:ERROR] -- $1"
-	exit 0
+	exit 1
 }
 
 # include the environment variables
 if [ ! -f "./ceremony.env" ]; then
 	error "ceremony.env file not found"
-	exit 1
 else
 	set -a            
 	source ./ceremony.env

@@ -17,6 +17,7 @@ jobs:
         docker build -q -t vocdoni/zk-voceremony-create --target zk-voceremony-create .
         docker run --rm -qt -v ./:/app --env-file ./ceremony.env vocdoni/zk-voceremony-create 
     - name: Commit ceremony artifacts
+      if : ${{ success() }}
       uses: stefanzweifel/git-auto-commit-action@v5
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -25,6 +26,7 @@ jobs:
         commit_options: '--no-verify'
         commit_user_name: ${{ github.actor }}
     - name: Create PR to end ceremony
+      if : ${{ success() }}
       run: gh pr create -B main -t "$PR_TITLE" -b "$PR_BODY" -l "$PR_LABELS" -a "$PR_ASSIGNEES"
       env:
         PR_TITLE: "On going ceremony: ${{ github.ref }}"
