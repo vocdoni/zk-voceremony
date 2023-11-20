@@ -20,7 +20,7 @@ jobs:
     - name: Run toolkit
       run: |
         docker build -q -t vocdoni/zk-voceremony --target zk-voceremony .
-        docker run --rm -qt --env-file ./ceremony.env vocdoni/zk-voceremony verify
+        docker run --rm -qt -v ./:/app --env-file ./ceremony.env vocdoni/zk-voceremony verify
     - name: Merge PR branch
       if: success() && contains(github.event.pull_request.labels.*.name, 'automerge')
       run: |
