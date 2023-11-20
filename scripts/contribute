@@ -143,11 +143,17 @@ You are going to contribute to '$CEREMONY_BRANCH' zk-voceremony process!"
 make_contribution() {
     CONTRIBUTION_USER_INPUT=`ask_to_user "Please enter a random input and press enter:"`
     echo "Your part of the input is: '$CONTRIBUTION_USER_INPUT'. Generating a random part..."
-    CONTRIBUTION_RANDOM_INPUT="${CONTRIBUTION_USER_INPUT}\n$(head -n 2048 /dev/urandom)"
+    CONTRIBUTION_RANDOM_INPUT="${CONTRIBUTION_USER_INPUT}\n$(head -n 64 /dev/urandom)"
     echo
     echo "The generation of the contribution will take a while... So, be patient and don't close the terminal until the process is finished."
     echo
     $SNARKJS zkc $LAST_CONTRIBUTION_FILE $CURRENT_CONTRIBUTION_FILE -e="$CONTRIBUTION_RANDOM_INPUT"
+    [ $? -ne 0 ] && {
+        echo; echo "Error generating contribution, please retry or ask for support"
+        exit 1
+    } || {
+        echo; echo "Done! Your contribution generated in $CURRENT_CONTRIBUTION_FILE!"
+    }
     echo
 }
 
@@ -186,6 +192,7 @@ publish_contribution() {
         gh pr create --fill --base $CEREMONY_BRANCH -R $GITHUB_REPO_URL
     [ $? -ne 0 ] && {
         echo; echo "Error during the contribution process, please start it over or ask for support"
+        exit 1
     } || {
         echo; echo "Done! Your contribution has been published!"
     }
