@@ -142,12 +142,12 @@ You are going to contribute to '$CEREMONY_BRANCH' zk-voceremony process!"
 
 make_contribution() {
     CONTRIBUTION_USER_INPUT=`ask_to_user "Please enter a random input and press enter:"`
-    echo "Your random input is: '$CONTRIBUTION_USER_INPUT'. Generating a random part..."
-    CONTRIBUTION_RANDOM_INPUT="${CONTRIBUTION_RANDOM_INPUT}\n$(head -n 2048 /dev/urandom)"
+    echo "Your part of the input is: '$CONTRIBUTION_USER_INPUT'. Generating a random part..."
+    CONTRIBUTION_RANDOM_INPUT="${CONTRIBUTION_USER_INPUT}\n$(head -n 2048 /dev/urandom)"
     echo
     echo "The generation of the contribution will take a while... So, be patient and don't close the terminal until the process is finished."
     echo
-    $SNARKJS zkc $LAST_CONTRIBUTION_FILE $CURRENT_CONTRIBUTION_FILE -e="$CONTRIBUTION_USER_INPUT$CONTRIBUTION_RANDOM_INPUT"
+    $SNARKJS zkc $LAST_CONTRIBUTION_FILE $CURRENT_CONTRIBUTION_FILE -e="$CONTRIBUTION_RANDOM_INPUT"
     echo
 }
 
