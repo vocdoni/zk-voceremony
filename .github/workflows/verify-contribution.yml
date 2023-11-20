@@ -1,20 +1,38 @@
 name: Verify contribution
 on: 
-  push:
+  pull_request_target:
     branches:
       - ceremony/*
+
+permissions: write-all
+
 jobs:
-  compile-and-prepare:
+  verify-contribution:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the repository
       uses: actions/checkout@v4
+    - name: Build toolkit
+      run: |
+        docker build -q -t vocdoni/zk-voceremony --target zk-voceremony .
+    - name: Dump GitHub context
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+      run: echo "$GITHUB_CONTEXT"
+    - name: Checkout the fork
+      uses: actions/checkout@v4
       with:
         lfs: true
-        ref: ${{ github.ref }}
+        ref: ${{ github.event.pull_request.head.sha }}
     - name: Checkout LFS objects
       run: git lfs checkout
     - name: Run toolkit
       run: |
-        docker build -q -t vocdoni/zk-voceremony --target zk-voceremony .
-        docker run --rm -qt --env-file ./ceremony.env vocdoni/zk-voceremony verify
+        docker run --rm -qt -v ./:/app --env-file ./ceremony.env vocdoni/zk-voceremony verify
+    - name: Merge PR branch
+      if: success() && contains(github.event.pull_request.title, 'Contribution:')
+      run: |
+        gh pr merge --admin --rebase "$PR_URL"
+      env:
+        PR_URL: ${{github.event.pull_request.html_url}}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
