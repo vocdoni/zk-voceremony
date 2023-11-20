@@ -6,9 +6,10 @@
 ### Contributions
 ```
 test_initial_contribution.zkey:c3a3c61589dc373dcb940d748c24b0b3552203abd334415e580d3d64915363d59f32931c665c5ca1a9b6eb569f165ee7c964debca9b7783b874536e82fad4af3
+test_lucasmenendez.zkey:9b8dfaec6217c4dd6fe0871adb322a8228bd509c53201aab3451052e577fe9dfffe3b4b42fe9c15482d3b12a271ec2f7f6bcc0336d5b5c90cc10cb2c59a19bce
 ```
 
 ### Last contribution
 ```
-
+test_lucasmenendez.zkey:9b8dfaec6217c4dd6fe0871adb322a8228bd509c53201aab3451052e577fe9dfffe3b4b42fe9c15482d3b12a271ec2f7f6bcc0336d5b5c90cc10cb2c59a19bce
 ```
