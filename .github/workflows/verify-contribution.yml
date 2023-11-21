@@ -16,7 +16,7 @@ jobs:
       uses: actions/checkout@v4
     - name: Build toolkit
       run: |
-        docker build -q -t vocdoni/zk-voceremony --target zk-voceremony .
+        docker build . -q --target zk-voceremony --tag vocdoni/zk-voceremony
     - name: Checkout the fork
       uses: actions/checkout@v4
       with:
