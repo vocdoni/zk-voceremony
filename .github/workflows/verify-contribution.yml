@@ -3,6 +3,8 @@ on:
   pull_request_target:
     branches:
       - ceremony/*
+    paths:
+      - contributions/*
 
 permissions: write-all
 
@@ -15,10 +17,6 @@ jobs:
     - name: Build toolkit
       run: |
         docker build -q -t vocdoni/zk-voceremony --target zk-voceremony .
-    - name: Dump GitHub context
-      env:
-        GITHUB_CONTEXT: ${{ toJson(github) }}
-      run: echo "$GITHUB_CONTEXT"
     - name: Checkout the fork
       uses: actions/checkout@v4
       with:
