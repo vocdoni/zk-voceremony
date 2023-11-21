@@ -76,15 +76,16 @@ prompt_env_inputs() {
     fi
 
     echo
-    if curl -s -H "Accept: application/vnd.github.v3+json" "https://api.github.com/repos/$GITHUB_REPO/pulls" \
-    | jq '.[].title' | grep Contribution | grep $CEREMONY_BRANCH ; then
-      echo "Oops, there's a PR from someone *right now* uploading a contribution to this ceremony, just wait a couple of minutes and try again"
-      exit 5
-    fi
+    while curl -s -H "Accept: application/vnd.github.v3+json" "https://api.github.com/repos/$GITHUB_REPO/pulls" \
+    | jq '.[].title' | grep Contribution | grep $CEREMONY_BRANCH ; do
+      echo "Oops, there's a PR from someone *right now* uploading a contribution to this ceremony, this takes a few minutes max, so let's sleep 30s and check again"
+      sleep 30
+    done
 
     echo
     echo "Now you need to login to your GitHub account to authenticate the process."
     echo " - During this process, you will be asked to login to your GitHub account using your browser."
+    echo " - You'll note the permissions requested are excessive, that's a limitation of how gh cli auth works, we can't do much about."
     echo " - The script will try to open your default browser, but it will fail."
     echo " - Don't worry, just copy the URL shown in the terminal and paste it in your browser."
     echo "Then, copy the code shown in the terminal and paste it in the browser."
@@ -122,15 +123,6 @@ prompt_env_inputs() {
 }
 
 check_contribute_env() {
-    # get the last contribution zkey file from the contributions file
-    if [ ! -f "$CONTRIBUTIONS_FILE" ]; then
-        error "contribution file does not exists, is the ceremony initialized?"
-        exit 1
-    else 
-        LAST_CONTRIBUTION_FILE=$(get_last_contribution_file_path)
-        LAST_CONTRIBUTION_HASH=$(get_last_contribution_hash)
-    fi
-
     CURRENT_CONTRIBUTION_FILE="$CONTRIBUTIONS_PATH/${CIRCUIT_FILENAME}_${CONTRIBUTOR_NAME}.zkey"
     if [ -e "$CURRENT_CONTRIBUTION_FILE" ]; then
         echo "You've already contributed to this zk-voceremony in file $CURRENT_CONTRIBUTION_FILE"
@@ -138,12 +130,30 @@ check_contribute_env() {
         exit 1
     fi
 
+    echo
+    while curl -s -H "Accept: application/vnd.github.v3+json" "https://api.github.com/repos/$GITHUB_REPO/pulls" \
+    | jq '.[].title' | grep Contribution | grep $CEREMONY_BRANCH ; do
+      echo "Oops, someone else started their contribution to this ceremony almost exactly at the same time as you."
+      echo "They will finish in a few minutes max, so let's sleep 30s and check again."
+      sleep 30
+    done
+
     touch .lock && git add .lock && git commit .lock -m "Prevent other contributions" && git push origin $CEREMONY_BRANCH
 
     gh pr create --title "Contribution: from $CONTRIBUTOR_NAME to '$CEREMONY_BRANCH' ceremony" --body "" \
         --base $CEREMONY_BRANCH --draft
 
+    git remote update -p
     git reset --hard upstream/$CEREMONY_BRANCH # discard .lock commit
+
+    # get the last contribution zkey file from the contributions file
+    if [ ! -f "$CONTRIBUTIONS_FILE" ]; then
+        error "contribution file does not exists, is the ceremony initialized?"
+        exit 1
+    else
+        LAST_CONTRIBUTION_FILE=$(get_last_contribution_file_path)
+        LAST_CONTRIBUTION_HASH=$(get_last_contribution_hash)
+    fi
 
     echo
     echo "Downloading artifacts..."
