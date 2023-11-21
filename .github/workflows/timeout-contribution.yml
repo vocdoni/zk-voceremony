@@ -1,0 +1,25 @@
+name: Contribution timeout
+on: 
+  pull_request_target:
+    branches:
+      - ceremony/*
+    paths:
+      - .lock
+
+permissions: write-all
+
+jobs:
+  timeout-contribution:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Wait 10 minutes
+      run: sleep 600
+    - name: Close PR branch if still a draft
+      if: success() && contains(github.event.pull_request.title, 'Contribution:')
+      run: |
+        if gh pr view "$PR_URL" --json isDraft -q .isDraft | grep true; then
+          gh pr close -c "Timed out" "$PR_URL"
+        fi
+      env:
+        PR_URL: ${{github.event.pull_request.html_url}}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

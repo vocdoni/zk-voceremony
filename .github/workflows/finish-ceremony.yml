@@ -16,7 +16,7 @@ jobs:
       run: git lfs checkout
     - name: Run toolkit
       run: |
-        docker build -q -t vocdoni/zk-voceremony --target zk-voceremony .
+        docker build . -q --target zk-voceremony --tag vocdoni/zk-voceremony
         docker run --rm -qt -v ./:/app --env-file ./ceremony.env vocdoni/zk-voceremony finish
     - name: Commit ceremony artifacts
       if : ${{ success() }}
