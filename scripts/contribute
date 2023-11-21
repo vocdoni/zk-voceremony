@@ -138,6 +138,13 @@ check_contribute_env() {
         exit 1
     fi
 
+    echo
+    if curl -s -H "Accept: application/vnd.github.v3+json" "https://api.github.com/repos/$GITHUB_REPO/pulls" \
+    | jq '.[].title' | grep Contribution | grep $CEREMONY_BRANCH ; then
+      echo "Oops, there's a PR from someone *right now* uploading a contribution to this ceremony, just wait a couple of minutes and try again"
+      exit 5
+    fi
+
     touch .lock && git add .lock && git commit .lock -m "Prevent other contributions" && git push origin $CEREMONY_BRANCH
 
     gh pr create --title "Contribution: from $CONTRIBUTOR_NAME to '$CEREMONY_BRANCH' ceremony" --body "" \
