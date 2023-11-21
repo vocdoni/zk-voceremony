@@ -85,6 +85,7 @@ prompt_env_inputs() {
     echo
     echo "Now you need to login to your GitHub account to authenticate the process."
     echo " - During this process, you will be asked to login to your GitHub account using your browser."
+    echo " - You'll note the permissions requested are excessive, that's a limitation of how gh cli auth works, we can't do much about."
     echo " - The script will try to open your default browser, but it will fail."
     echo " - Don't worry, just copy the URL shown in the terminal and paste it in your browser."
     echo "Then, copy the code shown in the terminal and paste it in the browser."
