@@ -54,7 +54,9 @@
             <p>Begin by running the following command in your terminal:</p>
             <pre>docker run --rm -it vocdoni/zk-voceremony</pre>
             <p>Then, simply follow the on-screen instructions.</p>
+	</div>
 
+	<div>
             <p>Alternatively, it is possible to build the image directly from the dockerfile and run the same command using the locally built image:</p>
             <span>Clone the repository</span>
             <pre>git clone https://github.com/vocdoni/zk-voceremony.git && cd zk-voceremony</pre>
@@ -62,8 +64,9 @@
             <pre>docker build -t vocdoni/zk-voceremony . </pre>
             <span>Run it</span>
             <pre>docker run --rm -it vocdoni/zk-voceremony</pre>
-            <br/>
-            <p>Both options will execute the following steps:</p>
+        </div>
+	<div>
+            <p>The steps executed by the process are the following:</p>
             <div class="list-container">
                 <ol>
                     <li>Download the docker image that contains all required software.</li>
