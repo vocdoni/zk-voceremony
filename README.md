@@ -69,6 +69,6 @@ A Github action will compile the circuit and generate the first contribution in 
 #### Build docker images locally
 
 ```
-docker build . --target zk-voceremony -t zk-voceremony 
-docker build . --target zk-voceremony-create -t zk-voceremony-create
+docker build . --target zk-voceremony --tag vocdoni/zk-voceremony
+docker build . --target zk-voceremony-create --tag vocdoni/zk-voceremony-create
 ```

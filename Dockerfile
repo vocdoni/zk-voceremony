@@ -16,6 +16,7 @@ RUN apt update \
     && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
     && apt update \
     && apt install --no-install-recommends -y gh \
+    && apt install --no-install-recommends -y jq \
 	&& apt autoremove -y \
     && apt clean \
     && rm -rf /var/lib/apt/lists/*
