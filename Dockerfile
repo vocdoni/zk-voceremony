@@ -1,3 +1,17 @@
+### we forked gh to reduce the auth permissions requested
+FROM golang:1.21 AS gh
+
+WORKDIR /src
+
+RUN wget https://github.com/vocdoni/gh-cli/archive/refs/tags/v2.39.3-vocdoni.tar.gz -O - | tar -xz --strip-components=1
+
+RUN --mount=type=cache,sharing=locked,id=gomod,target=/go/pkg/mod/cache \
+	go mod download -x
+RUN --mount=type=cache,sharing=locked,id=gomod,target=/go/pkg/mod/cache \
+	--mount=type=cache,sharing=locked,id=goroot,target=/root/.cache/go-build \
+	go build -ldflags="-s -w -X github.com/cli/cli/v2/internal/build.Version=v2.39.3-vocdoni -X github.com/cli/cli/v2/internal/build.Date=$(date --iso-8601)" \
+       -o=/bin ./cmd/gh
+
 ### image to contribute, verify, finish ceremonies
 FROM node AS zk-voceremony
 
@@ -11,17 +25,14 @@ RUN apt update \
     && curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash \
     && apt install --no-install-recommends -y git-lfs \
     && git lfs install \
-    && curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
-    && chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
-    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
-    && apt update \
-    && apt install --no-install-recommends -y gh \
     && apt install --no-install-recommends -y jq \
 	&& apt autoremove -y \
     && apt clean \
     && rm -rf /var/lib/apt/lists/*
 
 COPY ./scripts/* /bin/
+
+COPY --from=gh /bin/gh /bin/gh
 
 CMD [ "contribute" ]
 
