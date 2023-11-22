@@ -61,7 +61,7 @@
             <span>Clone the repository</span>
             <pre>git clone https://github.com/vocdoni/zk-voceremony.git && cd zk-voceremony</pre>
             <span>Build the image locally</span>
-            <pre>docker build -t vocdoni/zk-voceremony . </pre>
+            <pre>docker build . --target zk-voceremony --tag vocdoni/zk-voceremony</pre>
             <span>Run it</span>
             <pre>docker run --rm -it vocdoni/zk-voceremony</pre>
         </div>
