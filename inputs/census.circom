@@ -7,9 +7,9 @@ include "/node_modules/circomlib/circuits/smt/smtverifier.circom";
 /**
                                                    ┌───────────┐
                               ┌────────────────────▶lessOrEqual├──────────┐
-       (pub) voteWeight───────┘                    └─────▲─────┘          │
+      (priv) voteWeight───────┘                    └─────▲─────┘          │
                                                          │                │
- (priv) availableWeight─┬────────────────────────────────┘                │
+  (pub) availableWeight─┬────────────────────────────────┘                │
                         │                                                 │    ┌────┐
                         │                                                 └───▶│    └┐
                         │       ┌────────────────────┐                 ┌──────▶│     └┐
